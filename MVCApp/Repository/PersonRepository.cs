@@ -20,5 +20,16 @@ namespace MVCApp.Repository
             return Context.Persons.ToList();
         }
 
+        public int Add(Person person)
+        {
+            return Context.Persons.Add(person).Id;
+        }
+
+        public void Delete(int id)
+        {
+            var person = Context.Persons.FirstOrDefault(x => x.Id == id);
+            Context.Persons.Remove(person);
+        }
+
     }
 }
