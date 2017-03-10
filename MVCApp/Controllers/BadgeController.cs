@@ -8,5 +8,9 @@ namespace MVCApp.Controllers
 {
     public class BadgeController : Controller
     {
+        public ActionResult Index()
+        {
+            return View();
+        }
     }
 }

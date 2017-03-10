@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Web;
 using MVCApp.Models;
@@ -8,27 +9,48 @@ namespace MVCApp.Repository
 {
     public class PersonRepository
     {
-        public ApplicationDbContext Context;
+        private readonly ApplicationDbContext _context;
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public PersonRepository()
         {
-            Context = new ApplicationDbContext();
+            _context = new ApplicationDbContext();
         }
 
-        public List<Person> GetAll()
+        public IEnumerable<Person> GetAll()
         {
-            return Context.Persons.ToList();
+            return _context.Persons.ToList();
         }
 
-        public int Add(Person person)
+        public Person Add(Person person)
         {
-            return Context.Persons.Add(person).Id;
+            try
+            {
+                _context.Persons.Add(person);
+                _context.SaveChanges();
+                return person;
+            }
+            catch (DbException e)
+            {
+                Log.Error($"Error Occured while adding an entry to Person with id {person.Id}: {e.Message}");
+                return person;
+            }
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            var person = Context.Persons.FirstOrDefault(x => x.Id == id);
-            Context.Persons.Remove(person);
+            try
+            {
+                var person = _context.Persons.FirstOrDefault(x => x.Id == id);
+                _context.Persons.Remove(person);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (DbException e)
+            {
+                Log.Error($"Error Occured while deleting an entry from Person with id {id}: {e.Message}");
+                return false;
+            }
         }
 
     }
