@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MVCApp.Models.PersonViewModel>
 
-    <div class="col-md-12">
-        <div class="col-md-5">
+    <div class="col-md-12 container-table">
+        <div class="col-md-5 row">
             <form id="person_form" class="form-horizontal col-md-12">
                 <div class="form-group">
                     <label for="person_name">Name</label>
@@ -14,13 +14,13 @@
                 <button type="submit" id="btn_add" class="btn btn-primary">Add</button>
             </form>
         </div>
-        <div class="col-md-5 table-responsive">
+        <div class="col-md-5 table-responsive row">
             <table id="person_table" class="table table-striped">
                 <tr class="table-header">
-                    <td>Name</td>
-                    <td>Birthdate</td>
-                    <td>Age</td>
-                    <td>Delete</td>
+                    <th>Name</th>
+                    <th>Birthdate</th>
+                    <th>Age</th>
+                    <th>Delete</th>
                 </tr>
                 @foreach (var person in @Model)
                 {

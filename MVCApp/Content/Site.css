@@ -22,3 +22,9 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.container-table {
+    display: table;
+    margin-top: 20px
+}
+

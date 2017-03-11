@@ -22,18 +22,16 @@ namespace MVCApp.Repository
             return _context.Persons.ToList();
         }
 
-        public Person Add(Person person)
+        public void Add(Person person)
         {
             try
             {
                 _context.Persons.Add(person);
                 _context.SaveChanges();
-                return person;
             }
             catch (DbException e)
             {
-                Log.Error($"Error Occured while adding an entry to Person with id {person.Id}: {e.Message}");
-                return person;
+                Log.Error($"Error Occured while adding an entry to Person with name {person.Name}: {e.Message}");
             }
         }
 

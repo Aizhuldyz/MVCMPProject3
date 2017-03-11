@@ -15,7 +15,6 @@
         $("#person_form").validate({
             rules: {
                 name: "required",
-                lastname: "required",
                 birthdate: {
                     required: true,
                     birthdate: true
@@ -48,7 +47,9 @@
                                 $("#birthdate").val("");
                                 if (data.rowHtml != null) {
                                     $("table#person_table tr:last").after(data.rowHtml);
-
+                                }
+                                else if (data.error != null) {
+                                    alert("Error occured while adding new person!");
                                 }
                             },
                             error: function(xhr, status, error) {
@@ -69,12 +70,23 @@
                 url: "Person/Delete?id=" + deleteId,
                 type: "POST",
                 success: function (data, status, xhr) {
-                    var row = "table#person_table tr#" + deleteId;
-                    $(row).remove();
+                    if (data.success != null) {
+                        var row = "table#person_table tr#" + deleteId;
+                        $(row).remove();
+                    }
+                    else {
+                        alert("Error occured while deleting a person!");
+                    }
                 },
                 error: function (xhr, status, error) {
                     alert("Error occured while deleting a person!");
                 }
             });
         }
-    }));
+
+        $(".nav li").on("click", function () {
+            $(".nav li").removeClass("active");
+            $(this).addClass("active");
+        });
+    })
+    );

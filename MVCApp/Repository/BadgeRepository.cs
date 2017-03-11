@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Web;
 using MVCApp.Models;
@@ -8,29 +9,47 @@ namespace MVCApp.Repository
 {
     public class BadgeRepository
     {
-        public ApplicationDbContext Context;
+        private readonly ApplicationDbContext _context;
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 
         public BadgeRepository()
         {
-            Context = new ApplicationDbContext();
+            _context = new ApplicationDbContext();
         }
 
         public List<Badge> GetAll()
         {
-            return Context.Badges.ToList();
+            return _context.Badges.ToList();
         }
 
-        public void Add(Badge person)
+        public void Add(Badge badge)
         {
-            Context.Badges.Add(person);
-            Context.SaveChanges();
+            try
+            {
+                _context.Badges.Add(badge);
+                _context.SaveChanges();
+            }
+            catch (DbException e)
+            {
+                Log.Error($"Error Occured while adding an entry to Badge with title {badge.Title}: {e.Message}");
+            }
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            var badge = Context.Badges.FirstOrDefault(x => x.Id == id);
-            Context.Badges.Remove(badge);
-            Context.SaveChanges();
+            try
+            {
+                var badge = _context.Badges.FirstOrDefault(x => x.Id == id);
+                _context.Badges.Remove(badge);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (DbException e)
+            {
+                Log.Error($"Error Occured while deleting an entry from Badge with id {id}: {e.Message}");
+                return false;
+            }
         }
     }
 }

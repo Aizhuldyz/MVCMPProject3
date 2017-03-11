@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Mvc;
 using AutoMapper;
+using MVCApp.Helper;
 using MVCApp.Models;
 using MVCApp.Repository;
 
@@ -30,25 +31,27 @@ namespace MVCApp.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            _personRepository.Delete(id);
-            return RedirectToAction("Index");
+            if (_personRepository.Delete(id))
+            {
+                return Json(new {success="true"});
+            }
+
+            return Json(new {error = "true"});
         }
 
         [HttpPost]
         public ActionResult Add(string name, string birthdate)
         {
             var birthDate = DateTime.ParseExact(birthdate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            DateTime now = DateTime.Today;
-            int age = now.Year - birthDate.Year;
-            if (now < birthDate.AddYears(age)) age--;
+            var age = CommonHelper.GetAge(birthDate);
             var person = new Person {Name = name, BirthDate = birthDate, Age = age};            
             _personRepository.Add(person);
-            var rowHtml =
-                $"<tr id={person.Id}><td>{person.Name}</td><td>{person.BirthDate:dd/MM/yyyy}</td>" +
-                $"<td>{person.Age}</td>" + $"<td><button name=delete_person delete_id={person.Id} class=\"btn btn-link\">" + 
-                "Delete</button></td></tr>";
 
+            if (person.Id == 0) return Json(new {error = "true"});
+            var rowHtml = CommonHelper.GetRowHtml(person);
             return Json(new {rowHtml});
         }
+
+        
     }
 }
