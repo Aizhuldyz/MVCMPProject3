@@ -46,9 +46,10 @@
                             success: function (data, status, xhr) {
                                 $("#person_name").val("");
                                 $("#birthdate").val("");
-                                if(data.rowHtml != null)
+                                if (data.rowHtml != null) {
                                     $("table#person_table tr:last").after(data.rowHtml);
-                                return;
+
+                                }
                             },
                             error: function(xhr, status, error) {
                                 alert("Error occured while adding new person!");
@@ -57,9 +58,13 @@
                     }
                 });
 
-        $('button[name="delete_person"]').on("click", function (e) {
+        $(document).on("click", 'button[name="delete_person"]', function(e) {
+            deleteRow(e);
+        });
+
+        function deleteRow(e) {
             e.preventDefault();
-            var deleteId = $(this).attr("delete_id");
+            var deleteId = $(e.currentTarget).attr("delete_id");
             $.ajax({
                 url: "Person/Delete?id=" + deleteId,
                 type: "POST",
@@ -71,5 +76,5 @@
                     alert("Error occured while deleting a person!");
                 }
             });
-        });
+        }
     }));
