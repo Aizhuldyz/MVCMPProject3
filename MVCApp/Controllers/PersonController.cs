@@ -38,10 +38,17 @@ namespace MVCApp.Controllers
         public ActionResult Add(string name, string birthdate)
         {
             var birthDate = DateTime.ParseExact(birthdate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var age = DateTime.Now.Year - birthDate.Year;
-            var person = new Person {Name = name, BirthDate = birthDate, Age = age};
+            DateTime now = DateTime.Today;
+            int age = now.Year - birthDate.Year;
+            if (now < birthDate.AddYears(age)) age--;
+            var person = new Person {Name = name, BirthDate = birthDate, Age = age};            
             _personRepository.Add(person);
-            return RedirectToAction("Index");
+            var rowHtml =
+                $"<tr id={person.Id}><td>{person.Name}</td><td>{person.BirthDate:dd/MM/yyyy}</td>" +
+                $"<td>{person.Age}</td>" + $"<td><button name=delete_person delete_id={person.Id} class=\"btn btn-link\">" + 
+                "Delete</button></td></tr>";
+
+            return Json(new {rowHtml});
         }
     }
 }
