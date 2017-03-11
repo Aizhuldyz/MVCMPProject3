@@ -1,7 +1,8 @@
 ﻿$(document)
     .ready(
     $(function() {
-
+        var url = window.location.pathname;
+        $('ul.nav a[href="' + url + '"]').parent().addClass("active");
         $.validator.addMethod("birthdate", function (value) {
             var currentYear = new Date().getFullYear();
             var year = value.split('/');
@@ -83,10 +84,5 @@
                 }
             });
         }
-
-        $(".nav li").on("click", function () {
-            $(".nav li").removeClass("active");
-            $(this).addClass("active");
-        });
     })
     );
