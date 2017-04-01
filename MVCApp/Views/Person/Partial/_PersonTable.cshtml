@@ -1,0 +1,22 @@
+﻿@model IEnumerable<MVCApp.ViewModels.PersonViewModel>
+<table id="person_table" class="table table-striped">
+    <tr class="table-header">
+        <th>Name</th>
+        <th>Birthdate</th>
+        <th>Age</th>
+        <th>Photo</th>
+        <th>Delete</th>
+    </tr>
+    @foreach (var person in Model)
+            {
+        <tr id="@person.Id">
+            <td>@person.Name</td>
+            <td>@person.BirthDate.ToString("dd/MM/yyyy")</td>
+            <td>@person.Age</td>
+            <td>
+                <img href="@person.PhotoUrl"/>
+            </td>
+            <td><button name="delete_person" delete_id="@person.Id" class="btn btn-link">Delete</button></td>
+        </tr>
+    }
+</table>

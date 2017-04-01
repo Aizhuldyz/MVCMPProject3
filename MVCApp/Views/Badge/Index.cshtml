@@ -5,7 +5,8 @@
         <form id="badge_form" class="form-horizontal col-md-12">
             <div class="form-group">
                 <label for="badge_title">Title</label>
-                <input id="badge_title" name="title" type="text" class="form-control" placeholder="title of a badge" />
+                <input id="badge_title" name="title" type="text" cols="40" 
+                rows="5" class="form-control" placeholder="title of a badge" />
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
@@ -21,7 +22,7 @@
                 <th>Description</th>
                 <th>Delete</th>
             </tr>
-            @foreach (var badge in @Model)
+            @foreach (var badge in Model)
             {
                 <tr id="@badge.Id">
                     <td>@badge.Title</td>

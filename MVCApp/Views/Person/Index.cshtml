@@ -1,36 +1,16 @@
-﻿@model IEnumerable<MVCApp.Models.PersonViewModel>
+﻿@using MVCApp.ViewModels
+@model IEnumerable<MVCApp.ViewModels.PersonViewModel>
 
-    <div class="col-md-12 container-table">
-        <div class="col-md-5 row">
-            <form id="person_form" class="form-horizontal col-md-12">
-                <div class="form-group">
-                    <label for="person_name">Name</label>
-                    <input id="person_name" name="name" type="text" class="form-control" placeholder="name"/>
-                </div>
-                <div class="form-group">
-                    <label for="birthdate">Birthdate</label>
-                    <input id="birthdate" name="birthdate" type="text" class="form-control" placeholder="in dd/mm/yyyy format"/>
-                </div>
-                <button type="submit" id="btn_add" class="btn btn-primary">Add</button>
+<div class="col-md-12 container-table">
+    <div class="col-md-5 row">
+        @Html.Partial("Partial/_CreatePersonForm", new PersonCreateViewModel())
+    </div>
+    <div class="col-md-5 table-responsive row">
+        @Html.Partial("Partial/_PersonTable", Model)
+        <div class="col-md-3">
+            <form action="Person/GetAll" method="get">
+                <input type="submit" class="btn btn-primary" value="Download Person Names">
             </form>
         </div>
-        <div class="col-md-5 table-responsive row">
-            <table id="person_table" class="table table-striped">
-                <tr class="table-header">
-                    <th>Name</th>
-                    <th>Birthdate</th>
-                    <th>Age</th>
-                    <th>Delete</th>
-                </tr>
-                @foreach (var person in @Model)
-                {
-                    <tr id="@person.Id">
-                        <td>@person.Name</td>
-                        <td>@person.BirthDate.ToString("dd/MM/yyyy")</td>
-                        <td>@person.Age</td>
-                        <td><button name="delete_person" delete_id="@person.Id" class="btn btn-link">Delete</button></td>
-                    </tr>
-                }
-            </table>
-        </div>
     </div>
+</div>

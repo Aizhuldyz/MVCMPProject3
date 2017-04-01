@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
+using Microsoft.Ajax.Utilities;
 using MVCApp.Models;
 
 namespace MVCApp.Repository
@@ -20,6 +22,11 @@ namespace MVCApp.Repository
         public IEnumerable<Person> GetAll()
         {
             return _context.Persons.ToList();
+        }
+
+        public List<string> GetAllNames()
+        {
+            return _context.Persons.Select(x=>x.Name).ToList();
         }
 
         public void Add(Person person)

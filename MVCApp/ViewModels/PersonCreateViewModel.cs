@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web;
 
 namespace MVCApp.ViewModels
 {
-    public class PersonViewModel
+    public class PersonCreateViewModel
     {
         public int Id { get; set; }
         [DisplayName("Name")]
@@ -15,12 +17,11 @@ namespace MVCApp.ViewModels
 
         [DisplayName("BirthDate")]
         [Required]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/YYYY}")]
         public DateTime BirthDate { get; set; }
-
         public int Age { get; set; }
 
-        [DisplayName("Photo")]
-        public string PhotoUrl { get; set; }
+        [DataType(DataType.Upload)]
+        [Required]
+        public HttpPostedFileBase Photo { get; set; }
     }
 }
