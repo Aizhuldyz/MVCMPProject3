@@ -28,3 +28,11 @@ textarea {
     margin-top: 20px
 }
 
+.photoImg{
+      display:block; width:100%;
+}
+
+td {
+    max-width: 10px;
+}
+

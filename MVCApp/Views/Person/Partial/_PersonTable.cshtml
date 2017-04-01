@@ -14,7 +14,7 @@
             <td>@person.BirthDate.ToString("dd/MM/yyyy")</td>
             <td>@person.Age</td>
             <td>
-                <img href="@person.PhotoUrl"/>
+                <img src="@Url.Action("GetPhoto", "Person", new { personId = person.Id, fileName = person.PhotoUrl })" class="photoImg"/>
             </td>
             <td><button name="delete_person" delete_id="@person.Id" class="btn btn-link">Delete</button></td>
         </tr>
