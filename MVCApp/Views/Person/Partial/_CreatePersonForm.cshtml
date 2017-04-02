@@ -1,22 +1,22 @@
 ﻿@model MVCApp.ViewModels.PersonCreateViewModel
 
-@using (Html.BeginForm("Create", "Person", FormMethod.Post, new {enctype = "multipart/form-data",
-    @class = "form-horizontal col-md-12", id = "person_form"}))
-{
+<form id="person_form" class="form-horizontal col-md-12">
     <div class="form-group">
         @Html.LabelFor(m => m.Name)
-        @Html.TextBoxFor(m => m.Name, new {@class = "form-control", placeholder = "name", id = "person_name"})
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "name", id = "person_name" })
         @Html.ValidationMessageFor(m => m.Name)
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.BirthDate)
-        @Html.TextBoxFor(m => m.BirthDate, new {@class = "form-control", id = "birthdate", type="date"})
+        @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control", id = "birthdate", type = "date" })
         @Html.ValidationMessageFor(m => m.BirthDate)
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Photo)
-        @Html.TextBoxFor(m => m.Photo, new {@class = "form-control", type = "file"})
+        @Html.TextBoxFor(m => m.Photo, new { @class = "form-control", type = "file", id = "uploadedPhoto" })
         @Html.ValidationMessageFor(m => m.Photo)
     </div>
-    <input type="submit" id="btn_add1" class="btn btn-primary" Value="Add"/>
-}
+    <input type="submit" id="btn_add" class="btn btn-primary" Value="Add" />
+</form>
+
+

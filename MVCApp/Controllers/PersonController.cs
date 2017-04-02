@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using MVCApp.FilterAttributes;
 using MVCApp.Helper;
 using MVCApp.Models;
 using MVCApp.Repository;
@@ -47,26 +48,10 @@ namespace MVCApp.Controllers
         }
 
         [HttpPost]
+        [ValidateModelState]
         public ActionResult Create(PersonCreateViewModel person)
         {
-            var validImageTypes = new[]
-            {
-                "image/gif",
-                "image/jpeg",
-                "image/pjpeg",
-                "image/png"
-            };
-            if (!validImageTypes.Contains(person.Photo.ContentType))
-            {
-                ModelState.AddModelError("Photo", "Please choose either a GIF, JPG or PNG image.");
-            }
             var fileName = Path.GetFileName(person.Photo.FileName);
-            if (fileName == null) {
-                ModelState.AddModelError("Photo", "Invalid image name");
-            }
-
-            if (!ModelState.IsValid) return RedirectToAction("Index");
-
             var age = CommonHelper.GetAge(person.BirthDate);
             var newPerson = new Person {Name = person.Name, BirthDate = person.BirthDate, Age = age, PhotoUrl = fileName};
             _personRepository.Add(newPerson);
@@ -75,7 +60,11 @@ namespace MVCApp.Controllers
             var photoPath = path + "/" + fileName;
             Directory.CreateDirectory(path);
             person.Photo.SaveAs(photoPath);
-            return RedirectToAction("Index");
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonViewModel>());
+            var newPersonViewModel = Mapper.Map<Person, PersonViewModel>(newPerson);
+
+            return PartialView("Partial/_PersonTableRow", newPersonViewModel);
         }
 
 

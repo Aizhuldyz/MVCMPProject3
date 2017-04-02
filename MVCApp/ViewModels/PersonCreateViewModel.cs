@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Web;
+using MVCApp.Validation;
 
 namespace MVCApp.ViewModels
 {
@@ -16,12 +16,13 @@ namespace MVCApp.ViewModels
         public string Name { get; set; }
 
         [DisplayName("BirthDate")]
-        [Required]
+        [DataType(DataType.Date, ErrorMessage = "Please enter a valid date.")]
         public DateTime BirthDate { get; set; }
         public int Age { get; set; }
 
         [DataType(DataType.Upload)]
         [Required]
+        [FileContentTypeValidation]
         public HttpPostedFileBase Photo { get; set; }
     }
 }

@@ -3,58 +3,36 @@
     $(function() {
         var url = window.location.pathname;
         $('ul.nav a[href="' + url + '"]').parent().addClass("active");
-        $.validator.addMethod("birthdate", function (value) {
-            var currentYear = new Date().getFullYear();
-            var year = value.split('/');
-            if (value.match(/^\d\d?\/\d\d?\/\d\d\d\d$/) && parseInt(year[2]) <= currentYear
-                && parseInt(year[0]) <= 31 && parseInt(year[1]) <= 12)
-                return true;
-            else
-                return false;
-        });
-
-        $("#person_form").validate({
-            rules: {
-                name: "required",
-                birthdate: {
-                    required: true,
-                    birthdate: true
-                }
-            },
-            messages: {
-                name: "Please enter your firstname and lastname",
-                birthdate: "Please enter a valid birthdate in format dd/mm/yyyy"
-            }
-        });
-
-        $("#btn_add")
-            .on('click',
+        $("#person_form")
+            .on("submit",
                 function(e) {
                     e.preventDefault();
                     var isValid = $("#person_form").valid();
                     if (isValid) {
+                        var validator = $("#person_form").data("validator");
+                        var formData = new FormData();
+                        var photo = $("#uploadedPhoto").get(0).files[0];
+                        formData.append("Photo", photo);
                         var name = $("#person_name").val();
+                        formData.append("Name", name);
                         var birthdate = $("#birthdate").val();
+                        formData.append("BirthDate", birthdate);
                         $.ajax({
-                            url: "Person/Add",
+                            url: "Person/Create",
                             type: "POST",
-                            data: {
-                                name: name,
-                                birthdate: birthdate
-                            },
+                            processData: false,
+                            contentType: false,
+                            data: formData,
                             datatype: "json",
-                            success: function (data, status, xhr) {
-                                $("#person_name").val("");
-                                $("#birthdate").val("");
-                                if (data.rowHtml != null) {
-                                    $("table#person_table tr:last").after(data.rowHtml);
-                                }
-                                else if (data.error != null) {
-                                    alert("Error occured while adding new person!");
-                                }
+                            success: function (data, status, xhr) {                                
+                                    $("#person_name").val("");
+                                    $("#birthdate").val("");
+                                    $("#uploadedPhoto").val("");
+                                    $("table#person_table tr:last").after(data);                                    
                             },
                             error: function(xhr, status, error) {
-                                alert("Error occured while adding new person!");
+                                var errors = $.parseJSON(error);
+                                validator.showErrors(errors);
                             }
                         });
                     }

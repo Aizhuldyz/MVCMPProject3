@@ -2,7 +2,7 @@
 @model IEnumerable<MVCApp.ViewModels.PersonViewModel>
 
 <div class="col-md-12 container-table">
-    <div class="col-md-5 row">
+    <div id ="createForm" class="col-md-5 row">
         @Html.Partial("Partial/_CreatePersonForm", new PersonCreateViewModel())
     </div>
     <div class="col-md-5 table-responsive row">
