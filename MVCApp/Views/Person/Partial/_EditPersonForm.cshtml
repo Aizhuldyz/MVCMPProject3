@@ -1,6 +1,6 @@
 ﻿@model MVCApp.ViewModels.PersonEditViewModel
 
-<form id="person_form" class="form-horizontal col-md-12">
+<form id="person_form_edit" class="form-horizontal col-md-12">
     <div class="form-group">
         @Html.LabelFor(m => m.Name)
         @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "name", id = "person_name" })
@@ -8,7 +8,7 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.BirthDate)
-        @Html.EditorFor(m => m.BirthDate, new {htmlAttributes = new {@class = "form-control", id = "birthdate"}})
+        @Html.TextBoxFor(m => m.BirthDate, new {@class = "form-control", id = "birthdate"})
         @Html.ValidationMessageFor(m => m.BirthDate)
     </div>
     <div class="form-group">
@@ -16,6 +16,6 @@
         @Html.TextBoxFor(m => m.Photo, new { @class = "form-control", type = "file", id = "uploadedPhoto" })
         @Html.ValidationMessageFor(m => m.Photo)
     </div>
-    <input type="submit" id="btn_add" class="btn btn-primary" Value="Save Changes" />
+    <input type="submit" class="btn btn-primary" Value="Save Changes" />
     <button id="btn_cancel" class="btn btn-primary">Cancel</button>
 </form>
