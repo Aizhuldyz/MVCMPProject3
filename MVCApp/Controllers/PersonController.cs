@@ -67,6 +67,12 @@ namespace MVCApp.Controllers
             return PartialView("Partial/_PersonTableRow", newPersonViewModel);
         }
 
+        [HttpPost]
+        public ActionResult Edit(PersonEditViewModel person)
+        {
+            return PartialView("Partial/_EditPersonForm", person);
+        }
+
 
         public ActionResult GetPhoto(int personId, string fileName)
         {

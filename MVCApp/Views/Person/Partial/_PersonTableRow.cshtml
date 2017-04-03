@@ -1,10 +1,13 @@
 ﻿@model MVCApp.ViewModels.PersonViewModel
 <tr id="@Model.Id">
-    <td>@Model.Name</td>
-    <td>@Model.BirthDate.ToString("dd/MM/yyyy")</td>
-    <td>@Model.Age</td>
     <td>
         <img src="@Url.Action("GetPhoto", "Person", new { personId = @Model.Id, fileName = @Model.PhotoUrl })" class="photoImg" />
+    </td>
+    <td name="name">@Model.Name</td>
+    <td name="birthDate">@Model.BirthDate.ToString("MM/dd/yyyy")</td>
+    <td>@Model.Age</td>
+    <td>
+        <button name="edit_person" edit_id="@Model.Id" class="btn btn-link">Edit</button>
     </td>
     <td><button name="delete_person" delete_id="@Model.Id" class="btn btn-link">Delete</button></td>
 </tr>

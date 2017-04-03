@@ -62,5 +62,31 @@
                 }
             });
         }
+        $(document).on("click", 'button[name="edit_person"]', function (e) {
+            editRow(e);
+        });
+
+        function editRow(e) {
+            e.preventDefault();
+            var formData = new FormData();
+            var editId = $(e.currentTarget).attr("edit_id");
+            var selectorName = "tr#" + editId + " td[name=name]";
+            var name = $(selectorName).html();
+            formData.append("Name", name);            
+            var selectorBday = "tr#" + editId + " td[name=birthDate]";
+            var birthDate = $(selectorBday).html();
+            formData.append("BirthDate", birthDate);
+            $.ajax({
+                url: "Person/Edit",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: formData,
+                datatype: "json",
+                success: function (data, status, xhr) {
+                    $("#person_form").html(data);
+                }
+            });
+        }
     })
     );

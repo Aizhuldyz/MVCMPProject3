@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web;
 using MVCApp.Validation;
 
 namespace MVCApp.ViewModels
 {
-    public class PersonCreateViewModel
+    public class PersonEditViewModel
     {
         public int Id { get; set; }
         [DisplayName("Name")]
@@ -22,8 +23,6 @@ namespace MVCApp.ViewModels
         public int Age { get; set; }
 
         [DataType(DataType.Upload)]
-        [Required]
-        [FileContentTypeValidation]
         public HttpPostedFileBase Photo { get; set; }
     }
 }

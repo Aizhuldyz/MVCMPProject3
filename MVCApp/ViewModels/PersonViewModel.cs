@@ -15,7 +15,7 @@ namespace MVCApp.ViewModels
 
         [DisplayName("BirthDate")]
         [Required]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/YYYY}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/YYYY}")]
         public DateTime BirthDate { get; set; }
 
         public int Age { get; set; }

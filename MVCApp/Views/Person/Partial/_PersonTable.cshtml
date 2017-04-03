@@ -1,20 +1,24 @@
 ﻿@model IEnumerable<MVCApp.ViewModels.PersonViewModel>
 <table id="person_table" class="table table-striped">
     <tr class="table-header">
+        <th>Photo</th>
         <th>Name</th>
         <th>Birthdate</th>
         <th>Age</th>
-        <th>Photo</th>
+        <th>Edit</th>
         <th>Delete</th>
     </tr>
     @foreach (var person in Model)
-            {
+    {
         <tr id="@person.Id">
-            <td>@person.Name</td>
-            <td>@person.BirthDate.ToString("dd/MM/yyyy")</td>
+            <td>
+                <img src="@Url.Action("GetPhoto", "Person", new { personId = person.Id, fileName = person.PhotoUrl })" class="photoImg" />
+            </td>
+            <td name="name">@person.Name</td>
+            <td name="birthDate">@person.BirthDate.ToString("MM/dd/yyyy")</td>
             <td>@person.Age</td>
             <td>
-                <img src="@Url.Action("GetPhoto", "Person", new { personId = person.Id, fileName = person.PhotoUrl })" class="photoImg"/>
+                <button name="edit_person" edit_id="@person.Id" class="btn btn-link">Edit</button>
             </td>
             <td><button name="delete_person" delete_id="@person.Id" class="btn btn-link">Delete</button></td>
         </tr>
