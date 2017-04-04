@@ -18,11 +18,11 @@ namespace MVCApp.ViewModels
 
         [DisplayName("BirthDate")]
         [DataType(DataType.Date, ErrorMessage = "Please enter a valid date.")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/YYYY}")]
         public DateTime BirthDate { get; set; }
         public int Age { get; set; }
 
         [DataType(DataType.Upload)]
+        [FileContentTypeValidation]
         public HttpPostedFileBase Photo { get; set; }
     }
 }

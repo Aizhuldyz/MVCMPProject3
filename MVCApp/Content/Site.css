@@ -34,5 +34,9 @@ textarea {
 
 td {
     max-width: 10px;
+    word-wrap: break-word;
+    vertical-align: baseline;
 }
+
+
 

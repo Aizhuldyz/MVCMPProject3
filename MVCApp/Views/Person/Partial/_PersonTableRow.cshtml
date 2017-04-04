@@ -1,7 +1,16 @@
 ﻿@model MVCApp.ViewModels.PersonViewModel
 <tr id="@Model.Id">
     <td>
-        <img src="@Url.Action("GetPhoto", "Person", new { personId = @Model.Id, fileName = @Model.PhotoUrl })" class="photoImg" />
+        @{
+            if (Model.PhotoUrl != null)
+            {
+                <img src="@Url.Action("GetPhoto", "Person", new {personId = @Model.Id, fileName = @Model.PhotoUrl})" class="photoImg"/>
+            }
+            else
+            {
+                <img src="https://www.bfu.bg/uploads/pages/123.jpg" class="photoImg" />
+            }
+        }        
     </td>
     <td name="name">@Model.Name</td>
     <td name="birthDate">@Model.BirthDate.ToString("MM/dd/yyyy")</td>

@@ -50,8 +50,7 @@
                 type: "POST",
                 success: function (data, status, xhr) {
                     if (data.success != null) {
-                        var row = "table#person_table tr#" + deleteId;
-                        $(row).remove();
+                        location.reload();
                     }
                     else {
                         alert("Error occured while deleting a person!");
@@ -74,17 +73,17 @@
             var name = $(selectorName).html();
             formData.append("Name", name);            
             var selectorBday = "tr#" + editId + " td[name=birthDate]";
-            var birthDate = $(selectorBday).html();
+            var birthDate = $(selectorBday).html();            
             formData.append("BirthDate", birthDate);
             $.ajax({
                 url: "Person/Edit",
-                type: "POST",
+                type: "Post",
                 processData: false,
                 contentType: false,
                 data: formData,
                 datatype: "json",
                 success: function (data, status, xhr) {
-                    $("#person_form").html(data);
+                    $("#createForm").html(data);
                 }
             });
         }

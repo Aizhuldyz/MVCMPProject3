@@ -12,7 +12,16 @@
     {
         <tr id="@person.Id">
             <td>
-                <img src="@Url.Action("GetPhoto", "Person", new { personId = person.Id, fileName = person.PhotoUrl })" class="photoImg" />
+                @{
+                    if (person.PhotoUrl != null)
+                    {
+                        <img src="@Url.Action("GetPhoto", "Person", new {personId = @person.Id, fileName = @person.PhotoUrl})" class="photoImg" />
+                    }
+                    else
+                    {
+                        <img src="https://www.bfu.bg/uploads/pages/123.jpg" class="photoImg" />
+                    }
+                }
             </td>
             <td name="name">@person.Name</td>
             <td name="birthDate">@person.BirthDate.ToString("MM/dd/yyyy")</td>

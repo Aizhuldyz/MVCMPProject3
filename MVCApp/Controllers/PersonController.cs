@@ -51,9 +51,24 @@ namespace MVCApp.Controllers
         [ValidateModelState]
         public ActionResult Create(PersonCreateViewModel person)
         {
-            var fileName = Path.GetFileName(person.Photo.FileName);
-            var age = CommonHelper.GetAge(person.BirthDate);
-            var newPerson = new Person {Name = person.Name, BirthDate = person.BirthDate, Age = age, PhotoUrl = fileName};
+            var newPerson = new Person
+            {
+                Name = person.Name,
+                BirthDate = person.BirthDate,
+                Age = CommonHelper.GetAge(person.BirthDate)
+            };
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonViewModel>());
+            PersonViewModel newPersonViewModel;
+            if (person.Photo == null)
+            {
+                _personRepository.Add(newPerson);
+                newPersonViewModel = Mapper.Map<Person, PersonViewModel>(newPerson);
+                return PartialView("Partial/_PersonTableRow", newPersonViewModel);
+            }
+
+            var fileName = Path.GetFileName(person.Photo.FileName);                        
+            newPerson.PhotoUrl = fileName;
             _personRepository.Add(newPerson);
 
             var path = Server.MapPath(ConfigurationManager.AppSettings["PersonPhotoUploadPath"]) + newPerson.Id;
@@ -61,16 +76,21 @@ namespace MVCApp.Controllers
             Directory.CreateDirectory(path);
             person.Photo.SaveAs(photoPath);
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonViewModel>());
-            var newPersonViewModel = Mapper.Map<Person, PersonViewModel>(newPerson);
-
+            newPersonViewModel = Mapper.Map<Person, PersonViewModel>(newPerson);
             return PartialView("Partial/_PersonTableRow", newPersonViewModel);
         }
+
 
         [HttpPost]
         public ActionResult Edit(PersonEditViewModel person)
         {
             return PartialView("Partial/_EditPersonForm", person);
+        }
+
+        [HttpPost]
+        public ActionResult SaveEdit(PersonEditViewModel person)
+        {
+            return RedirectToAction("Index");
         }
 
 
@@ -80,7 +100,6 @@ namespace MVCApp.Controllers
             return File(photoPath, MimeMapping.GetMimeMapping(fileName));
         }
 
-        [HttpGet]
         public ActionResult GetAll()
         {
             var persons = _personRepository.GetAllNames();

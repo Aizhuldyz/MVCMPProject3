@@ -11,7 +11,7 @@ namespace MVCApp.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (value == null) return new ValidationResult("Please choose an image to upload");
+            if (value == null) return ValidationResult.Success;
 
             var file = (HttpPostedFileWrapper)value;
             var validImageTypes = new[]

@@ -22,7 +22,6 @@ namespace MVCApp.ViewModels
         public int Age { get; set; }
 
         [DataType(DataType.Upload)]
-        [Required]
         [FileContentTypeValidation]
         public HttpPostedFileBase Photo { get; set; }
     }
