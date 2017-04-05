@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
@@ -24,9 +25,31 @@ namespace MVCApp.Repository
             return _context.Persons.ToList();
         }
 
+        public Person Get(int id)
+        {
+            try
+            {
+                return _context.Persons.FirstOrDefault(x => x.Id == id);
+            }
+            catch (DbException e)
+            {
+                Log.Error($"Error Occured while retrieving a Person with id {id}: {e.Message}");
+                return null;
+            }
+
+        }
+
         public List<string> GetAllNames()
         {
-            return _context.Persons.Select(x=>x.Name).ToList();
+            try
+            {
+                return _context.Persons.Select(x => x.Name).ToList();
+            }
+            catch (DbException e)
+            {
+                Log.Error($"Error Occured while retrieving all person names: {e.Message}");
+                return null;
+            }
         }
 
         public void Add(Person person)
@@ -40,6 +63,27 @@ namespace MVCApp.Repository
             {
                 Log.Error($"Error Occured while adding an entry to Person with name {person.Name}: {e.Message}");
             }
+        }
+
+
+        public bool Update(Person person)
+        {
+            var oldPerson = Get(person.Id);
+            if (oldPerson != null)
+            {
+                try
+                {
+                    _context.Persons.AddOrUpdate(person);
+                    _context.SaveChanges();
+                }
+                catch (DbException e)
+                {
+                    Log.Error($"Error Occured while updating Person with id: {person.Id}: {e.Message}");
+                    return false;
+                }
+                return true;
+            }
+            return false;
         }
 
         public bool Delete(int id)

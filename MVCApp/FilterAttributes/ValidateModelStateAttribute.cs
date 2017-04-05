@@ -19,6 +19,8 @@ namespace MVCApp.FilterAttributes
                     kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
                 );
 
+
+                errors.Remove("Id");
                 var json = new JavaScriptSerializer().Serialize(errors);
 
                 // send 400 status code (Bad Request)

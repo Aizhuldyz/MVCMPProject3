@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -81,16 +82,46 @@ namespace MVCApp.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult Edit(PersonEditViewModel person)
+        public ActionResult Edit(int id)
         {
-            return PartialView("Partial/_EditPersonForm", person);
+            var person = _personRepository.Get(id);
+            if (person == null)
+            {
+                return HttpNotFound();
+            }
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonEditViewModel>());
+            var personViewModel = Mapper.Map<Person, PersonEditViewModel>(person);
+            return PartialView("Partial/_EditPersonForm", personViewModel);
         }
 
         [HttpPost]
-        public ActionResult SaveEdit(PersonEditViewModel person)
+        [ValidateModelState]
+        public ActionResult Edit(PersonEditViewModel editPerson)
         {
-            return RedirectToAction("Index");
+            Mapper.Initialize(cfg => cfg.CreateMap<PersonEditViewModel, Person>());
+            var person = Mapper.Map<PersonEditViewModel, Person>(editPerson);
+            person.Age = CommonHelper.GetAge(person.BirthDate);
+            if (editPerson.DeletePhoto)
+            {
+                person.PhotoUrl = null;
+            }
+            else if(editPerson.Photo != null)
+            {
+                var fileName = Path.GetFileName(editPerson.Photo.FileName);
+                person.PhotoUrl = fileName;
+
+                var path = Server.MapPath(ConfigurationManager.AppSettings["PersonPhotoUploadPath"]) + editPerson.Id;
+                var photoPath = path + "/" + fileName;
+                Directory.CreateDirectory(path);
+                editPerson.Photo.SaveAs(photoPath);
+            }
+
+            if (_personRepository.Update(person))
+            {
+                return Json(new {success = true});
+            }
+            return Json(new {error = true});
         }
 
 
