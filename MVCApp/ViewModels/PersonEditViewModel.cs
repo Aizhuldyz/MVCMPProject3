@@ -17,6 +17,7 @@ namespace MVCApp.ViewModels
 
         [DisplayName("BirthDate")]
         [DataType(DataType.Date, ErrorMessage = "Please enter a valid date.")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/YYYY}")]
         public DateTime BirthDate { get; set; }
         public string PhotoUrl { get; set; }
 

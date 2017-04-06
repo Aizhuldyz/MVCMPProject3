@@ -26,8 +26,8 @@ namespace MVCApp
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
-            bundles.Add(new ScriptBundle("~/bundles/site").Include(
-                        "~/Scripts/person.js", "~/Scripts/badge.js"));
+            bundles.Add(new ScriptBundle("~/bundles/js").Include(
+                        "~/Scripts/js/person.js", "~/Scripts/js/badge.js"));
         }
     }
 }

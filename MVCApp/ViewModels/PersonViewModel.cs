@@ -8,13 +8,11 @@ namespace MVCApp.ViewModels
     public class PersonViewModel
     {
         public int Id { get; set; }
+
         [DisplayName("Name")]
-        [Required]
-        [DisplayFormat(ApplyFormatInEditMode = true)]
         public string Name { get; set; }
 
         [DisplayName("BirthDate")]
-        [Required]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/YYYY}")]
         public DateTime BirthDate { get; set; }
 

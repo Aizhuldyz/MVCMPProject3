@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
 using MVCApp.Models;
@@ -16,6 +17,20 @@ namespace MVCApp.Repository
         public BadgeRepository()
         {
             _context = new ApplicationDbContext();
+        }
+
+        public Badge Get(int id)
+        {
+            try
+            {
+                return _context.Badges.FirstOrDefault(x => x.Id == id);
+            }
+            catch (DbException e)
+            {
+                Log.Error($"Error Occured while retrieving a Badge with id {id}: {e.Message}");
+                return null;
+            }
+
         }
 
         public List<Badge> GetAll()
@@ -34,6 +49,26 @@ namespace MVCApp.Repository
             {
                 Log.Error($"Error Occured while adding an entry to Badge with title {badge.Title}: {e.Message}");
             }
+        }
+
+        public bool Update(Badge badge)
+        {
+            var oldPerson = Get(badge.Id);
+            if (oldPerson != null)
+            {
+                try
+                {
+                    _context.Badges.AddOrUpdate(badge);
+                    _context.SaveChanges();
+                }
+                catch (DbException e)
+                {
+                    Log.Error($"Error Occured while updating Person with id: {badge.Id}: {e.Message}");
+                    return false;
+                }
+                return true;
+            }
+            return false;
         }
 
         public bool Delete(int id)

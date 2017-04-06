@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -39,14 +41,78 @@ namespace MVCApp.Controllers
             return Json(new { error = "true" });
         }
 
-        [HttpPost]
-        public ActionResult Add(Badge badge)
-        {
-            _badgeRepository.Add(badge);
 
-            if (badge.Id == 0) return Json(new { error = "true" });
-            var rowHtml = CommonHelper.GetRowHtml(badge);
-            return Json(new { rowHtml });
+        public ActionResult Add()
+        {
+            ViewBag.PageName = "Create";
+            return View(new BadgeCreateViewModel());
+        }
+
+        [HttpPost]
+        public ActionResult Add(BadgeCreateViewModel badge)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<BadgeCreateViewModel, Badge>());
+            var newBadge = Mapper.Map<BadgeCreateViewModel, Badge>(badge);
+
+            if (badge.Image == null)
+            {
+                _badgeRepository.Add(newBadge);
+            }
+            else
+            {
+                var fileName = Path.GetFileName(badge.Image.FileName);
+                newBadge.ImageUrl = fileName;
+                _badgeRepository.Add(newBadge);
+                var path = Server.MapPath(ConfigurationManager.AppSettings["BadgeImageUploadPath"]) + newBadge.Id;
+                var imagePath = path + "/" + fileName;
+                Directory.CreateDirectory(path);
+                badge.Image.SaveAs(imagePath);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult GetImage(int badgeId, string fileName)
+        {
+            var photoPath = ConfigurationManager.AppSettings["BadgeImageUploadPath"] + badgeId + "/" + fileName;
+            return File(photoPath, MimeMapping.GetMimeMapping(fileName));
+        }
+
+
+        public ActionResult Edit(int id)
+        {
+            ViewBag.PageName = "Edit";
+            var badge = _badgeRepository.Get(id);
+            if (badge == null)
+            {
+                return RedirectToAction("Index");
+            }
+            Mapper.Initialize(cfg => cfg.CreateMap<Badge, BadgeEditViewModel>());
+            var badgeViewModel = Mapper.Map<Badge, BadgeEditViewModel>(badge);
+            return View(badgeViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(BadgeEditViewModel badge)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<BadgeEditViewModel, Badge>());
+            var editedBadge = Mapper.Map<BadgeEditViewModel, Badge>(badge);
+
+            if (badge.DeleteImage)
+            {
+                editedBadge.ImageUrl = null;
+            }
+            else if(badge.Image != null)
+            {
+                var fileName = Path.GetFileName(badge.Image.FileName);
+                editedBadge.ImageUrl = fileName;
+                var path = Server.MapPath(ConfigurationManager.AppSettings["BadgeImageUploadPath"]) + badge.Id;
+                var imagePath = path + "/" + fileName;
+                Directory.CreateDirectory(path);
+                badge.Image.SaveAs(imagePath);
+            }
+            _badgeRepository.Update(editedBadge);
+            return RedirectToAction("Index");
         }
     }
 }
