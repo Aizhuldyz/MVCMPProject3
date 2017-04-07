@@ -40,3 +40,13 @@ td {
 
 
 
+.breadcrumb.brand-primary{
+    background-color:#428bca;    
+}
+.breadcrumb.brand-primary a{
+    color:#fff;    
+}
+.breadcrumb.brand-primary li.active{
+    color:#eee;    
+}
+

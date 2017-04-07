@@ -4,9 +4,10 @@
 }
 
 @section breadcrumb{
-    <li>
-        @ViewBag.PageName
-    </li>
+    @{
+        var pagename = ViewBag.PageName;
+    }
+    <li>@pagename</li>
 }
 <body>
     <div class="col-md-12 container-table">

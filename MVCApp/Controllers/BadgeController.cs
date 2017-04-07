@@ -29,6 +29,7 @@ namespace MVCApp.Controllers
             Mapper.Initialize(cfg => cfg.CreateMap<Badge, BadgeViewModel>());
             var badgeViewModels = Mapper.Map<IEnumerable<Badge>, IEnumerable<BadgeViewModel>>(badges);
 
+            ViewBag.PageName = "Badge";
             return View(badgeViewModels);
         }
 
@@ -44,7 +45,7 @@ namespace MVCApp.Controllers
 
         public ActionResult Add()
         {
-            ViewBag.PageName = "Create";
+            ViewBag.PageName = "Create Badge";
             return View(new BadgeCreateViewModel());
         }
 
