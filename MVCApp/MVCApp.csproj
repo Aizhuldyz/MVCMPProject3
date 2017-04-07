@@ -34,6 +34,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IncludeIisSettings>true</IncludeIisSettings>
+    <IncludeAppPool>true</IncludeAppPool>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -208,6 +211,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="FilterAttributes\ValidateModelStateAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -216,18 +220,31 @@
     <Compile Include="Migrations\201703100322235_Person_Badge.Designer.cs">
       <DependentUpon>201703100322235_Person_Badge.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703301615380_photo.cs" />
+    <Compile Include="Migrations\201703301615380_photo.Designer.cs">
+      <DependentUpon>201703301615380_photo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704051717444_badgeImage.cs" />
+    <Compile Include="Migrations\201704051717444_badgeImage.Designer.cs">
+      <DependentUpon>201704051717444_badgeImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Badge.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Repository\BadgeRepository.cs" />
     <Compile Include="Repository\PersonRepository.cs" />
+    <Compile Include="Validation\FileContentTypeValidation.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModels\BadgeCreateViewModel.cs" />
+    <Compile Include="ViewModels\BadgeEditViewModel.cs" />
     <Compile Include="ViewModels\BadgeViewModel.cs" />
+    <Compile Include="ViewModels\PersonEditViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
-    <Compile Include="ViewModels\PersonViewModel.cs" />
+    <Compile Include="ViewModels\PersonCreateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\PersonViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -236,12 +253,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\badge.js" />
+    <Content Include="Scripts\js\badge.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\Dev.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalDev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -251,11 +270,13 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\person.js" />
+    <Content Include="Scripts\js\person.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -289,9 +310,21 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Person\Index.cshtml" />
     <Content Include="Views\Badge\Index.cshtml" />
+    <Content Include="Views\Person\Partial\_PersonTable.cshtml" />
+    <Content Include="Views\Person\Partial\_CreatePersonForm.cshtml" />
+    <Content Include="Views\Person\Partial\_PersonTableRow.cshtml" />
+    <Content Include="Views\Person\Partial\_EditPersonForm.cshtml" />
+    <Content Include="Views\Person\_PersonLayout.cshtml" />
+    <Content Include="Views\Badge\Add.cshtml" />
+    <Content Include="Views\Badge\Edit.cshtml" />
+    <Content Include="Views\Badge\_BadgeLayout.cshtml" />
+    <None Include="Web.Dev.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -305,10 +338,43 @@
     <EmbeddedResource Include="Migrations\201703100322235_Person_Badge.resx">
       <DependentUpon>201703100322235_Person_Badge.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703301615380_photo.resx">
+      <DependentUpon>201703301615380_photo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704051717444_badgeImage.resx">
+      <DependentUpon>201704051717444_badgeImage.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LocalDev|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
