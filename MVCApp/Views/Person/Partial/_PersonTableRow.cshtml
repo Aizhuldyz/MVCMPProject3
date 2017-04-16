@@ -1,22 +1,27 @@
 ﻿@model MVCApp.ViewModels.PersonViewModel
+
 <tr id="@Model.Id">
     <td>
-        @{
-            if (Model.PhotoUrl != null)
-            {
-                <img src="@Url.Action("GetPhoto", "Person", new {personId = @Model.Id, fileName = @Model.PhotoUrl})" class="photoImg"/>
-            }
-            else
-            {
-                <img src="https://www.bfu.bg/uploads/pages/123.jpg" class="photoImg" />
-            }
-        }        
+        <img src="@Url.Action("GetPhoto", "Person", new {personId = @Model.Id, fileName = @Model.PhotoUrl})" class="photoImg" />
     </td>
     <td name="name">@Model.Name</td>
     <td name="birthDate">@Model.BirthDate.ToString("MM/dd/yyyy")</td>
     <td>@Model.Age</td>
     <td>
+        <div class="add_badge_container">
+            @foreach (var badge in Model.Badges)
+            {
+                <div class="badge_item">
+                    <img src="@Url.Action("GetImage", "Badge", new {badgeId = @badge.Id, fileName = @badge.ImageUrl})" class="photoImg img-circle" />
+                </div>
+            }
+        </div>
+    </td>
+    <td><button name="add_new_badge" person_id="@Model.Id" person_name="@Model.Name" class="btn btn-link">Add</button></td>
+    <td>
         <button name="edit_person" edit_id="@Model.Id" class="btn btn-link">Edit</button>
     </td>
-    <td><button name="delete_person" delete_id="@Model.Id" class="btn btn-link">Delete</button></td>
+    <td>
+        <button name="delete_person" delete_id="@Model.Id" class="btn btn-link">Delete</button>
+    </td>
 </tr>

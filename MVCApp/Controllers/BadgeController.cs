@@ -115,5 +115,15 @@ namespace MVCApp.Controllers
             _badgeRepository.Update(editedBadge);
             return RedirectToAction("Index");
         }
+
+
+        public ActionResult GetBadgeInfo(int id)
+        {
+            var badge = _badgeRepository.Get(id);
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Badge, BadgeViewModel>());
+            var badgeViewModel = Mapper.Map<Badge, BadgeViewModel>(badge);
+            return PartialView("Partial/_BadgeInfo", badgeViewModel);
+        }
     }
 }

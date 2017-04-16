@@ -68,7 +68,6 @@
 
         function editRow(e) {
             e.preventDefault();
-            var formData = new FormData();
             var editId = $(e.currentTarget).attr("edit_id");           
             $.ajax({
                 url: "Person/Edit?id=" + editId,
@@ -80,9 +79,58 @@
                     alert("error while rendering edit form");
                 }
             });
-        }        
-    }));
+        }
 
+        $(document).on("click", 'button[name="add_new_badge"]', function (e) {
+            addNewBadge(e);
+        });
+
+        function addNewBadge(e) {
+            e.preventDefault();
+            var personId = $(e.currentTarget).attr("person_id");
+            var personName = $(e.currentTarget).attr("person_name");
+            $.ajax({
+                url: "Person/AddRecognition",
+                type: "GET",
+                data: {
+                    personId: personId,
+                    personName: personName
+                    
+                },
+                success: function (data, status, xhr) {
+                    $("#createForm").html(data);
+                },
+                error: function (data, status, err) {
+                    alert("error while rendering add badge form");
+                }
+            });
+        }
+
+        $(document).on("click", "img", function(e) {
+            showBadgeModal(e);
+        });
+
+        function showBadgeModal(e) {
+            e.preventDefault();
+            var badgeId = $(e.currentTarget).attr("img_id");
+            $.ajax({
+                url: "Badge/GetBadgeInfo?id=" + badgeId,
+                type: "GET",
+                success: function (data, status, xhr) {
+                    $("#badgeInfo").html(data);
+                    $("#badgeModal").css("display", "block");
+                },
+                error: function (data, status, err) {
+                    alert("error while rendering badge info modal");
+                }
+            });
+        }
+
+        $(document).on("click", "#close_badge_modal", function (e) {
+            $("#badgeModal").css("display", "none");
+        });
+
+    }));
 
 $(document).on("submit", "#person_form_edit", function (e) {
     e.preventDefault();
@@ -122,4 +170,34 @@ $(document).on("submit", "#person_form_edit", function (e) {
                 }
             });
         }
+});
+
+$(document).on("submit", "#add_badge_form", function (e) {
+    e.preventDefault();
+    $('#add_badge_form').removeData("validator").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse($('#add_badge_form'));
+    $('#add_badge_form').validate();
+    var validator = $("#add_badge_form").data("validator");
+    var personId = $("#person_name").attr("person-id");
+    var selectedBadgeId = $("#badge_dropdown").val();
+    $.ajax({
+        url: "Person/AddRecognition",
+        type: "POST",
+        data: {
+            personId : personId,
+            badgeId : selectedBadgeId
+        },
+        datatype: "json",
+        success: function (data, status, xhr) {
+            if (data.success) {
+                location.reload();
+            } else {
+                var errors = $.parseJSON(data.message);
+                validator.showErrors(errors);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Error Occured while adding a badge");            
+        }
+        });
 });

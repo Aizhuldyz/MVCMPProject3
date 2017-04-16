@@ -5,6 +5,8 @@
         <th>Name</th>
         <th>Birthdate</th>
         <th>Age</th>
+        <th>Badges</th>
+        <th>New Badge</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -12,24 +14,37 @@
     {
         <tr id="@person.Id">
             <td>
-                @{
-                    if (person.PhotoUrl != null)
-                    {
-                        <img src="@Url.Action("GetPhoto", "Person", new {personId = @person.Id, fileName = @person.PhotoUrl})" class="photoImg" />
-                    }
-                    else
-                    {
-                        <img src="https://www.bfu.bg/uploads/pages/123.jpg" class="photoImg" />
-                    }
-                }
+                <img src="@Url.Action("GetPhoto", "Person", new {personId = @person.Id, fileName = @person.PhotoUrl})" class="photoImg" />
             </td>
             <td name="name">@person.Name</td>
             <td name="birthDate">@person.BirthDate.ToString("MM/dd/yyyy")</td>
             <td>@person.Age</td>
             <td>
+                <div class="add_badge_container">
+                    @foreach (var badge in person.Badges)
+                    {
+                        <div class="badge_item">
+                            <img img_id="@badge.Id" src="@Url.Action("GetImage", "Badge", new {badgeId = @badge.Id, fileName = @badge.ImageUrl})" 
+                                 title="@badge.Title" class="photoImg img-circle" />
+                        </div>
+                    }
+                </div>
+            </td>
+            <td><button name="add_new_badge" person_id="@person.Id" person_name="@person.Name" class="btn btn-link">Add</button></td>
+            <td>
                 <button name="edit_person" edit_id="@person.Id" class="btn btn-link">Edit</button>
             </td>
-            <td><button name="delete_person" delete_id="@person.Id" class="btn btn-link">Delete</button></td>
+            <td>
+                <button name="delete_person" delete_id="@person.Id" class="btn btn-link">Delete</button>
+            </td>
         </tr>
     }
 </table>
+
+
+<div id="badgeModal" class="modal">
+    <div class="modal-content">
+        <span id="close_badge_modal" class="close">&times;</span>
+        <div id="badgeInfo"></div>
+    </div>
+</div>

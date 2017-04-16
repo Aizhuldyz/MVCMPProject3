@@ -1,0 +1,15 @@
+﻿@model MVCApp.ViewModels.BadgeViewModel
+    
+<div class="badgeInfoContainer col-md-11">
+    <div class="info">
+        <div class="info_inner">
+            <img src="@Url.Action("GetImage", "Badge", new {badgeId = @Model.Id, fileName = @Model.ImageUrl})" class="photoImg" />
+        </div>
+        <div class="info_inner">
+            <p>@Model.Title</p>
+        </div>
+    </div>
+    <div class="info">
+        <p>@Model.Description</p>
+    </div>
+</div>

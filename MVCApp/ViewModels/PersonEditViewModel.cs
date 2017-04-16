@@ -12,12 +12,15 @@ namespace MVCApp.ViewModels
     {
         public int Id { get; set; }
         [DisplayName("Name")]
+        [StringLength(50, ErrorMessage = "Name should not be more than 50 chars")]
         [Required]
         public string Name { get; set; }
 
         [DisplayName("BirthDate")]
         [DataType(DataType.Date, ErrorMessage = "Please enter a valid date.")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/YYYY}")]
+        [Required]
+        [BirthDateValidation]
         public DateTime BirthDate { get; set; }
         public string PhotoUrl { get; set; }
 

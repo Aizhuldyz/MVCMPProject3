@@ -20,16 +20,7 @@
             {
                 <tr id="@badge.Id">
                     <td>
-                        @{
-                            if (badge.ImageUrl != null)
-                            {
-                                <img src="@Url.Action("GetImage", "Badge", new {badgeId = @badge.Id, fileName = @badge.ImageUrl})" class="photoImg"/>
-                            }
-                            else
-                            {
-                                <img src="https://www.bfu.bg/uploads/pages/123.jpg" class="photoImg"/>
-                            }
-                        }
+                        <img src="@Url.Action("GetImage", "Badge", new {badgeId = @badge.Id, fileName = @badge.ImageUrl})" class="photoImg"/>
                     </td>
                     <td>@badge.Title</td>
                     <td>@badge.Description</td>

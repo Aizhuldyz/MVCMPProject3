@@ -8,29 +8,47 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using AutoMapper;
+using Microsoft.Ajax.Utilities;
 using MVCApp.FilterAttributes;
 using MVCApp.Helper;
 using MVCApp.Models;
 using MVCApp.Repository;
 using MVCApp.ViewModels;
+using Newtonsoft.Json;
 
 namespace MVCApp.Controllers
 {
     public class PersonController : Controller
     {
         private readonly PersonRepository _personRepository;
+        private readonly RecognitionRepository _recognitionRepository;
+        private readonly BadgeRepository _badgeRepository;
+
         public PersonController()
         {
             _personRepository = new PersonRepository();
+            _recognitionRepository = new RecognitionRepository();
+            _badgeRepository = new BadgeRepository();
         }
 
         public ActionResult Index()
         {
             var persons = _personRepository.GetAll();
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonViewModel>());
-            var personViewModels = Mapper.Map<IEnumerable<Person>, IEnumerable<PersonViewModel>>(persons);
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Person, PersonViewModel>();
+                cfg.CreateMap<Recognition, BadgeViewModel>()
+                    .ForMember(c => c.Id, r => r.MapFrom(rcg => rcg.Badge.Id))
+                    .ForMember(c => c.Title, r => r.MapFrom(rcg => rcg.Badge.Title))
+                    .ForMember(c => c.Description, r => r.MapFrom(rcg => rcg.Badge.Description))
+                    .ForMember(c => c.ImageUrl, r => r.MapFrom(rcg => rcg.Badge.ImageUrl));
+            });
+
+            var mapper = config.CreateMapper();
+            var personViewModels = mapper.Map<IEnumerable<Person>, IEnumerable<PersonViewModel>>(persons);
 
             return View(personViewModels);
         }
@@ -55,8 +73,7 @@ namespace MVCApp.Controllers
             var newPerson = new Person
             {
                 Name = person.Name,
-                BirthDate = person.BirthDate,
-                Age = CommonHelper.GetAge(person.BirthDate)
+                BirthDate = person.BirthDate
             };
 
             Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonViewModel>());
@@ -101,7 +118,7 @@ namespace MVCApp.Controllers
         {
             Mapper.Initialize(cfg => cfg.CreateMap<PersonEditViewModel, Person>());
             var person = Mapper.Map<PersonEditViewModel, Person>(editPerson);
-            person.Age = CommonHelper.GetAge(person.BirthDate);
+            person.PhotoUrl = _personRepository.Get(person.Id).PhotoUrl;
             if (editPerson.DeletePhoto)
             {
                 person.PhotoUrl = null;
@@ -127,6 +144,10 @@ namespace MVCApp.Controllers
 
         public ActionResult GetPhoto(int personId, string fileName)
         {
+            if (fileName == null)
+            {
+                return File("~/App_Data/Uploads/default.png", "image/png");
+            }
             var photoPath = ConfigurationManager.AppSettings["PersonPhotoUploadPath"] + personId + "/" + fileName;
             return File(photoPath, MimeMapping.GetMimeMapping(fileName));
         }
@@ -146,5 +167,37 @@ namespace MVCApp.Controllers
             return File(txtStream, "text/plain", "Persons.txt");
         }
 
+
+        public ActionResult AddRecognition(int personId, string personName)
+        {
+
+            Mapper.Initialize(cfg => cfg.CreateMap<Badge, BadgeViewModel>());
+            var badges = _badgeRepository.GetAll();
+            var selectBadges = new SelectBadgesViewModel()
+            {
+                PersonId = personId,
+                PersonName = personName,
+                Badges = Mapper.Map<List<Badge>, List<BadgeViewModel>>(badges)
+            };
+
+            return PartialView("Partial/_AddNewBadge", selectBadges);
+        }
+
+        [HttpPost]
+        public ActionResult AddRecognition(AddNewBadgeViewModel recognition)
+        {
+            if (_recognitionRepository.Exists(recognition.PersonId, recognition.BadgeId))
+            {
+                var errors = new Dictionary<string, string[]>
+                {
+                    { "Badges", new [] {"Person already has that badge"}}
+                };
+                var errorMessage = new JavaScriptSerializer().Serialize(errors);
+                return Json(new {error = true, message = errorMessage});
+            }
+            if (_recognitionRepository.Add(recognition.PersonId, recognition.BadgeId))
+                return Json(new {success = true});
+            return new HttpStatusCodeResult(500);
+        }
     }
 }

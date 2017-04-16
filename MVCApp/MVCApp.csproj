@@ -228,14 +228,26 @@
     <Compile Include="Migrations\201704051717444_badgeImage.Designer.cs">
       <DependentUpon>201704051717444_badgeImage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704150827027_recognition.cs" />
+    <Compile Include="Migrations\201704150827027_recognition.Designer.cs">
+      <DependentUpon>201704150827027_recognition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704150947267_removeAge.cs" />
+    <Compile Include="Migrations\201704150947267_removeAge.Designer.cs">
+      <DependentUpon>201704150947267_removeAge.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Badge.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Recognition.cs" />
     <Compile Include="Repository\BadgeRepository.cs" />
     <Compile Include="Repository\PersonRepository.cs" />
+    <Compile Include="Repository\RecognitionRepository.cs" />
+    <Compile Include="Validation\BirthDateValidation.cs" />
     <Compile Include="Validation\FileContentTypeValidation.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModels\AddNewBadgeViewModel.cs" />
     <Compile Include="ViewModels\BadgeCreateViewModel.cs" />
     <Compile Include="ViewModels\BadgeEditViewModel.cs" />
     <Compile Include="ViewModels\BadgeViewModel.cs" />
@@ -245,6 +257,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\PersonViewModel.cs" />
+    <Compile Include="ViewModels\SelectBadgesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -318,6 +331,8 @@
     <Content Include="Views\Badge\Add.cshtml" />
     <Content Include="Views\Badge\Edit.cshtml" />
     <Content Include="Views\Badge\_BadgeLayout.cshtml" />
+    <Content Include="Views\Person\Partial\_AddNewBadge.cshtml" />
+    <Content Include="Views\Badge\Partial\_BadgeInfo.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
@@ -343,6 +358,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704051717444_badgeImage.resx">
       <DependentUpon>201704051717444_badgeImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704150827027_recognition.resx">
+      <DependentUpon>201704150827027_recognition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704150947267_removeAge.resx">
+      <DependentUpon>201704150947267_removeAge.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
