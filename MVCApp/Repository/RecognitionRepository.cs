@@ -46,5 +46,15 @@ namespace MVCApp.Repository
             }
             return false;
         }
+
+        public IEnumerable<Recognition> GetByPersonId(int id)
+        {
+            return _context.Recognitions.Where(x => x.PersonId == id).ToList();
+        }
+
+        public IEnumerable<Recognition> GetAll()
+        {
+            return _context.Recognitions.ToList();
+        }
     }
 }

@@ -154,12 +154,22 @@ namespace MVCApp.Controllers
 
         public ActionResult GetAll()
         {
-            var persons = _personRepository.GetAllNames();
+            var personDetails = _personRepository.GetAll().ToList();
 
             var txtBuilder = new StringBuilder();
-            for (var n = 0; n < persons.Count; n++)
+
+            foreach (var p in personDetails)
             {
-                txtBuilder.AppendLine(persons.ElementAt(n));
+                txtBuilder.Append(p.Name);
+                var recognitions = _recognitionRepository.GetByPersonId(p.Id).ToList();
+                if (recognitions.Count != 0)
+                {
+                    txtBuilder.AppendLine(" : " + String.Join(",", recognitions.Select(x=>x.Badge.Title).ToList()));
+                }
+                else
+                {
+                    txtBuilder.AppendLine(": No badges for this person");
+                }
             }
 
             var txtContent = txtBuilder.ToString();
