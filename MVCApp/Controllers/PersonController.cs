@@ -89,7 +89,7 @@ namespace MVCApp.Controllers
             newPerson.PhotoUrl = fileName;
             _personRepository.Add(newPerson);
 
-            var path = Server.MapPath(ConfigurationManager.AppSettings["PersonPhotoUploadPath"]) + newPerson.Id;
+            var path = GetPhotoPath(newPerson.Id);
             var photoPath = path + "/" + fileName;
             Directory.CreateDirectory(path);
             person.Photo.SaveAs(photoPath);
@@ -128,7 +128,7 @@ namespace MVCApp.Controllers
                 var fileName = Path.GetFileName(editPerson.Photo.FileName);
                 person.PhotoUrl = fileName;
 
-                var path = Server.MapPath(ConfigurationManager.AppSettings["PersonPhotoUploadPath"]) + editPerson.Id;
+                var path = GetPhotoPath(editPerson.Id);
                 var photoPath = path + "/" + fileName;
                 Directory.CreateDirectory(path);
                 editPerson.Photo.SaveAs(photoPath);
@@ -148,7 +148,7 @@ namespace MVCApp.Controllers
             {
                 return File("~/App_Data/Uploads/default.png", "image/png");
             }
-            var photoPath = ConfigurationManager.AppSettings["PersonPhotoUploadPath"] + personId + "/" + fileName;
+            var photoPath = GetPhotoPath(personId) + "/" + fileName;
             return File(photoPath, MimeMapping.GetMimeMapping(fileName));
         }
 
@@ -209,5 +209,11 @@ namespace MVCApp.Controllers
                 return Json(new {success = true});
             return new HttpStatusCodeResult(500);
         }
+
+        private string GetPhotoPath(int personId)
+        {
+            return Server.MapPath(ConfigurationManager.AppSettings["PersonPhotoUploadPath"]) + personId;
+        }
+
     }
 }

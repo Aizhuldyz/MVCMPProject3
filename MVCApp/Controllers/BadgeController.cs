@@ -64,7 +64,7 @@ namespace MVCApp.Controllers
                 var fileName = Path.GetFileName(badge.Image.FileName);
                 newBadge.ImageUrl = fileName;
                 _badgeRepository.Add(newBadge);
-                var path = Server.MapPath(ConfigurationManager.AppSettings["BadgeImageUploadPath"]) + newBadge.Id;
+                var path = GetImagePath(newBadge.Id);
                 var imagePath = path + "/" + fileName;
                 Directory.CreateDirectory(path);
                 badge.Image.SaveAs(imagePath);
@@ -75,7 +75,7 @@ namespace MVCApp.Controllers
 
         public ActionResult GetImage(int badgeId, string fileName)
         {
-            var photoPath = ConfigurationManager.AppSettings["BadgeImageUploadPath"] + badgeId + "/" + fileName;
+            var photoPath = GetImagePath(badgeId) + "/" + fileName;
             return File(photoPath, MimeMapping.GetMimeMapping(fileName));
         }
 
@@ -107,7 +107,7 @@ namespace MVCApp.Controllers
             {
                 var fileName = Path.GetFileName(badge.Image.FileName);
                 editedBadge.ImageUrl = fileName;
-                var path = Server.MapPath(ConfigurationManager.AppSettings["BadgeImageUploadPath"]) + badge.Id;
+                var path = GetImagePath(badge.Id);
                 var imagePath = path + "/" + fileName;
                 Directory.CreateDirectory(path);
                 badge.Image.SaveAs(imagePath);
@@ -125,5 +125,11 @@ namespace MVCApp.Controllers
             var badgeViewModel = Mapper.Map<Badge, BadgeViewModel>(badge);
             return PartialView("Partial/_BadgeInfo", badgeViewModel);
         }
+
+        private string GetImagePath(int badgeId)
+        {
+            return Server.MapPath(ConfigurationManager.AppSettings["BadgeImageUploadPath"]) + badgeId;
+        }
+
     }
 }
