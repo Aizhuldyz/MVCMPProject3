@@ -89,8 +89,7 @@ th {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
-    height: 30%
+    width: 25%;
 }
 
 /* The Close Button */
@@ -101,28 +100,7 @@ th {
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.badgeInfoContainer {
-    height: 100%;
-    position: relative;
-    display: table;
-    max-width: 60%;
-}
-
-.info {
-    display: table;
-}
-
-.info_inner {
-    display: table-cell;
-}
 
 .infoImg {
-    width: 50%;
+    width: 100%;
 }
