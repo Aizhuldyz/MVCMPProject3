@@ -25,8 +25,6 @@ namespace MVCApp.Controllers
         public ActionResult Index()
         {
             var badges = _badgeRepository.GetAll();
-
-            Mapper.Initialize(cfg => cfg.CreateMap<Badge, BadgeViewModel>());
             var badgeViewModels = Mapper.Map<IEnumerable<Badge>, IEnumerable<BadgeViewModel>>(badges);
 
             ViewBag.PageName = "Badge";
@@ -52,7 +50,6 @@ namespace MVCApp.Controllers
         [HttpPost]
         public ActionResult Add(BadgeCreateViewModel badge)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<BadgeCreateViewModel, Badge>());
             var newBadge = Mapper.Map<BadgeCreateViewModel, Badge>(badge);
 
             if (badge.Image == null)
@@ -88,7 +85,6 @@ namespace MVCApp.Controllers
             {
                 return RedirectToAction("Index");
             }
-            Mapper.Initialize(cfg => cfg.CreateMap<Badge, BadgeEditViewModel>());
             var badgeViewModel = Mapper.Map<Badge, BadgeEditViewModel>(badge);
             return View(badgeViewModel);
         }
@@ -96,7 +92,6 @@ namespace MVCApp.Controllers
         [HttpPost]
         public ActionResult Edit(BadgeEditViewModel badge)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<BadgeEditViewModel, Badge>());
             var editedBadge = Mapper.Map<BadgeEditViewModel, Badge>(badge);
 
             if (badge.DeleteImage)
@@ -120,8 +115,6 @@ namespace MVCApp.Controllers
         public ActionResult GetBadgeInfo(int id)
         {
             var badge = _badgeRepository.Get(id);
-
-            Mapper.Initialize(cfg => cfg.CreateMap<Badge, BadgeViewModel>());
             var badgeViewModel = Mapper.Map<Badge, BadgeViewModel>(badge);
             return PartialView("Partial/_BadgeInfo", badgeViewModel);
         }

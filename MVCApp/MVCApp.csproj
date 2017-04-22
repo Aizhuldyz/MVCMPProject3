@@ -201,6 +201,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -333,6 +334,7 @@
     <Content Include="Views\Badge\_BadgeLayout.cshtml" />
     <Content Include="Views\Person\Partial\_AddNewBadge.cshtml" />
     <Content Include="Views\Badge\Partial\_BadgeInfo.cshtml" />
+    <Content Include="Views\Person\Partial\_PersonDetails.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

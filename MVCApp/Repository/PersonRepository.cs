@@ -102,5 +102,12 @@ namespace MVCApp.Repository
             }
         }
 
+        public List<Person> FindAll(Func<Person, bool> predicate)
+        {
+            var persons = _context.Persons.Where(predicate).ToList();
+            return persons;
+        }
+
+
     }
 }
