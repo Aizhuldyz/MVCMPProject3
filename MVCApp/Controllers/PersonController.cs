@@ -28,6 +28,7 @@ namespace MVCApp.Controllers
             _badgeRepository = new BadgeRepository();
         }
 
+        [LogAction]
         public ActionResult Index()
         {
             var persons = _personRepository.GetAll();
@@ -37,7 +38,9 @@ namespace MVCApp.Controllers
         }
 
         [Route("user/{id:decimal}/delete")]
-        public ActionResult DeleteById(int id)
+        [HttpPost]
+        [LogAction]
+        public ActionResult Delete(int id)
         {
             if (_personRepository.Delete(id))
             {
@@ -47,19 +50,9 @@ namespace MVCApp.Controllers
             return Json(new { error = true }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public ActionResult Delete(int id)
-        {
-            if (_personRepository.Delete(id))
-            {
-                return Json(new {success=true});
-            }
-
-            return Json(new {error = true});
-        }
-
 
         [Route("create-user")]
+        [LogAction]
         public ActionResult Create()
         {
             return View("Partial/_CreatePersonForm");
@@ -67,6 +60,7 @@ namespace MVCApp.Controllers
 
         [HttpPost]
         [ValidateModelState]
+        [LogAction]
         public ActionResult Create(PersonCreateViewModel person)
         {
             var newPerson = new Person
@@ -95,7 +89,7 @@ namespace MVCApp.Controllers
             return PartialView("Partial/_PersonTableRow", newPersonViewModel);
         }
 
-
+        [LogAction]
         public ActionResult EditById(int id)
         {
             var person = _personRepository.Get(id);
@@ -122,6 +116,7 @@ namespace MVCApp.Controllers
 
         [HttpPost]
         [ValidateModelState]
+        [LogAction]
         public ActionResult Edit(PersonEditViewModel editPerson)
         {
             var person = Mapper.Map<PersonEditViewModel, Person>(editPerson);
@@ -148,7 +143,7 @@ namespace MVCApp.Controllers
             return Json(new {error = true});
         }
 
-
+        [LogAction]
         public ActionResult GetPhoto(int personId, string fileName)
         {
             if (fileName == null)
@@ -159,6 +154,7 @@ namespace MVCApp.Controllers
             return File(photoPath, MimeMapping.GetMimeMapping(fileName));
         }
 
+        [LogAction]
         public ActionResult GetAll()
         {
             var personDetails = _personRepository.GetAll().ToList();
@@ -184,7 +180,7 @@ namespace MVCApp.Controllers
             return File(txtStream, "text/plain", "Persons.txt");
         }
 
-
+        [LogAction]
         public ActionResult AddRecognition(int personId, string personName)
         {
             var badges = _badgeRepository.GetAll();
@@ -199,6 +195,7 @@ namespace MVCApp.Controllers
         }
 
         [HttpPost]
+        [LogAction]
         public ActionResult AddRecognition(AddNewBadgeViewModel recognition)
         {
             if (_recognitionRepository.Exists(recognition.PersonId, recognition.BadgeId))
@@ -216,6 +213,7 @@ namespace MVCApp.Controllers
         }
 
         [Route("users")]
+        [LogAction]
         public ActionResult FindAll()
         {
             var persons = _personRepository.GetAll().ToList();
@@ -223,6 +221,7 @@ namespace MVCApp.Controllers
             return View("Partial/_Personlist", personViewModels);
         }
 
+        [LogAction]
         public ActionResult FindByName(string name)
         {
             var persons = _personRepository.FindAll(person => person.Name.Contains(name));
@@ -230,6 +229,8 @@ namespace MVCApp.Controllers
             return View("Partial/_Personlist", personViewModels);
         }
 
+
+        [LogAction]
         public ActionResult FindByFullName(string name)
         {
             var fullName = name.Replace("_", " ");
@@ -239,6 +240,7 @@ namespace MVCApp.Controllers
         }
 
         [Route("user/{id:decimal}")]
+        [LogAction]
         public ActionResult FindById(int id)
         {
             var person = _personRepository.Get(id);

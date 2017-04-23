@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using MVCApp.FilterAttributes;
 using MVCApp.Helper;
 using MVCApp.Models;
 using MVCApp.Repository;
@@ -33,6 +34,7 @@ namespace MVCApp.Controllers
 
         [Route("award/{id:decimal}/delete")]
         [HttpPost]
+        [LogAction]
         public ActionResult Delete(int id)
         {
             if (_badgeRepository.Delete(id))
@@ -43,6 +45,7 @@ namespace MVCApp.Controllers
 
         [Route("create-award")]
         [HttpGet]
+        [LogAction]
         public ActionResult Add()
         {
             ViewBag.PageName = "Create Badge";
@@ -51,6 +54,7 @@ namespace MVCApp.Controllers
 
         [Route("create-award")]
         [HttpPost]
+        [LogAction]
         public ActionResult Add(BadgeCreateViewModel badge)
         {
             var newBadge = Mapper.Map<BadgeCreateViewModel, Badge>(badge);
@@ -73,6 +77,7 @@ namespace MVCApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [LogAction]
         public ActionResult GetImage(int badgeId, string fileName)
         {
             var photoPath = GetImagePath(badgeId) + "/" + fileName;
@@ -81,6 +86,7 @@ namespace MVCApp.Controllers
 
         [Route("award/{id:decimal}/edit")]
         [HttpGet]
+        [LogAction]
         public ActionResult Edit(int id)
         {
             ViewBag.PageName = "Edit";
@@ -95,6 +101,7 @@ namespace MVCApp.Controllers
 
         [Route("award/{id:decimal}/edit")]
         [HttpPost]
+        [LogAction]
         public ActionResult Edit(BadgeEditViewModel badge)
         {
             if (badge.Image != null)
@@ -116,7 +123,7 @@ namespace MVCApp.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [LogAction]
         public ActionResult GetBadgeInfo(int id)
         {
             var badge = _badgeRepository.Get(id);
@@ -124,7 +131,7 @@ namespace MVCApp.Controllers
             return PartialView("Partial/_BadgeInfoModal", badgeViewModel);
         }
 
-
+        [LogAction]
         public ActionResult FindAll()
         {
             var badges = _badgeRepository.GetAll().ToList();
@@ -132,6 +139,7 @@ namespace MVCApp.Controllers
             return View("Partial/_BadgeList", badgeViewModels);
         }
 
+        [LogAction]
         public ActionResult FindByTitle(string title)
         {
             var badges = _badgeRepository.FindAll(badge => badge.Title.Contains(title)).ToList();
@@ -139,6 +147,7 @@ namespace MVCApp.Controllers
             return View("Partial/_BadgeDetails", badgeViewModels);
         }
 
+        [LogAction]
         public ActionResult FindByFullTitle(string title)
         {
             var fullTitle = title.Replace("_", " ");
@@ -147,6 +156,7 @@ namespace MVCApp.Controllers
             return View("Partial/_BadgeInfo", badgeViewModel);
         }
 
+        [LogAction]
         public ActionResult FindById(int id)
         {
             var badge = _badgeRepository.FindSingle(b => b.Id.Equals(id));
