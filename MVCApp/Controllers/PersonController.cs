@@ -37,8 +37,8 @@ namespace MVCApp.Controllers
             return View(personViewModels);
         }
 
-        [Route("user/{id:decimal}/delete")]
         [HttpPost]
+        [Route("user/{id:decimal}/delete")]        
         [LogAction]
         public ActionResult Delete(int id)
         {

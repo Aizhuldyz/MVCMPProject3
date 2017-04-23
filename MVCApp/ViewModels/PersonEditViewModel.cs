@@ -24,7 +24,7 @@ namespace MVCApp.ViewModels
         public DateTime BirthDate { get; set; }
         public string PhotoUrl { get; set; }
 
-        [DisplayName("DeletePhoto")]
+        [DisplayName("Delete Photo")]
         public bool DeletePhoto { get; set; }
 
         [DataType(DataType.Upload)]

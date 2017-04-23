@@ -47,7 +47,7 @@
             e.preventDefault();
             var deleteId = $(e.currentTarget).attr("delete_id");
             $.ajax({
-                url: "Person/Delete?id=" + deleteId,
+                url: "user/" + deleteId + "/Delete",
                 type: "POST",
                 success: function (data, status, xhr) {
                     if (data.success != null) {
@@ -149,7 +149,9 @@ $(document).on("submit", "#person_form_edit", function (e) {
             var birthdate = $("#birthdate").val();
             formData.append("BirthDate", birthdate);
             var deletePhoto = $("#delete_check").prop("checked");
-            formData.append("Delete Photo", deletePhoto);
+            if (deletePhoto == undefined)
+                deletePhoto = false;
+            formData.append("DeletePhoto", deletePhoto);
             $.ajax({
                 url: "Person/Edit",
                 type: "POST",

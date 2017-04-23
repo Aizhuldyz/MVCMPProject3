@@ -10,7 +10,7 @@
             e.preventDefault();
             var deleteId = $(e.currentTarget).attr("delete_id");
             $.ajax({
-                url: "Badge/Delete?id=" + deleteId,
+                url: "award/" + deleteId + "/delete",
                 type: "POST",
                 success: function (data, status, xhr) {
                     if (data.success != null) {
