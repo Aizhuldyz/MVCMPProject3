@@ -31,7 +31,7 @@ namespace MVCApp.Controllers
             return View(badgeViewModels);
         }
 
-
+        [Route("award/{id:decimal}/delete")]
         [HttpPost]
         public ActionResult Delete(int id)
         {
@@ -41,12 +41,15 @@ namespace MVCApp.Controllers
         }
 
 
+        [Route("create-award")]
+        [HttpGet]
         public ActionResult Add()
         {
             ViewBag.PageName = "Create Badge";
             return View(new BadgeCreateViewModel());
         }
 
+        [Route("create-award")]
         [HttpPost]
         public ActionResult Add(BadgeCreateViewModel badge)
         {
@@ -76,7 +79,8 @@ namespace MVCApp.Controllers
             return File(photoPath, MimeMapping.GetMimeMapping(fileName));
         }
 
-
+        [Route("award/{id:decimal}/edit")]
+        [HttpGet]
         public ActionResult Edit(int id)
         {
             ViewBag.PageName = "Edit";
@@ -89,24 +93,25 @@ namespace MVCApp.Controllers
             return View(badgeViewModel);
         }
 
+        [Route("award/{id:decimal}/edit")]
         [HttpPost]
         public ActionResult Edit(BadgeEditViewModel badge)
         {
-            var editedBadge = Mapper.Map<BadgeEditViewModel, Badge>(badge);
-
-            if (badge.DeleteImage)
-            {
-                editedBadge.ImageUrl = null;
-            }
-            else if(badge.Image != null)
+            if (badge.Image != null)
             {
                 var fileName = Path.GetFileName(badge.Image.FileName);
-                editedBadge.ImageUrl = fileName;
+                badge.ImageUrl = fileName;
                 var path = GetImagePath(badge.Id);
                 var imagePath = path + "/" + fileName;
                 Directory.CreateDirectory(path);
                 badge.Image.SaveAs(imagePath);
             }
+            else
+            {
+                badge.ImageUrl = _badgeRepository.Get(badge.Id).ImageUrl;
+            }
+            
+            var editedBadge = Mapper.Map<BadgeEditViewModel, Badge>(badge);
             _badgeRepository.Update(editedBadge);
             return RedirectToAction("Index");
         }
@@ -116,7 +121,37 @@ namespace MVCApp.Controllers
         {
             var badge = _badgeRepository.Get(id);
             var badgeViewModel = Mapper.Map<Badge, BadgeViewModel>(badge);
-            return PartialView("Partial/_BadgeInfo", badgeViewModel);
+            return PartialView("Partial/_BadgeInfoModal", badgeViewModel);
+        }
+
+
+        public ActionResult FindAll()
+        {
+            var badges = _badgeRepository.GetAll().ToList();
+            var badgeViewModels = Mapper.Map<List<Badge>, List<BadgeViewModel>>(badges);
+            return View("Partial/_BadgeList", badgeViewModels);
+        }
+
+        public ActionResult FindByTitle(string title)
+        {
+            var badges = _badgeRepository.FindAll(badge => badge.Title.Contains(title)).ToList();
+            var badgeViewModels = Mapper.Map<List<Badge>, List<BadgeViewModel>>(badges);
+            return View("Partial/_BadgeDetails", badgeViewModels);
+        }
+
+        public ActionResult FindByFullTitle(string title)
+        {
+            var fullTitle = title.Replace("_", " ");
+            var badge = _badgeRepository.FindSingle(b => b.Title.Equals(fullTitle));
+            var badgeViewModel = Mapper.Map<Badge, BadgeViewModel>(badge);
+            return View("Partial/_BadgeInfo", badgeViewModel);
+        }
+
+        public ActionResult FindById(int id)
+        {
+            var badge = _badgeRepository.FindSingle(b => b.Id.Equals(id));
+            var badgeViewModel = Mapper.Map<Badge, BadgeViewModel>(badge);
+            return View("Partial/_BadgeInfo", badgeViewModel);
         }
 
         private string GetImagePath(int badgeId)

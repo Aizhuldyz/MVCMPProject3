@@ -26,19 +26,8 @@
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Image)
-                @if (Model.ImageUrl != null)
-                {
-                    <br>
-                    @Html.LabelFor(m => m.DeleteImage)
-                    @Html.CheckBoxFor(m => m.DeleteImage, new { id = "delete_check" })
-                    @Html.TextBoxFor(m => m.Image, new { @class = "form-control", type = "file", id = "uploadedImage" })
-                    @Html.ValidationMessageFor(m => m.Image)
-                }
-                else
-                {
-                    @Html.TextBoxFor(m => m.Image, new { @class = "form-control", type = "file", id = "uploadedPhoto" })
-                    @Html.ValidationMessageFor(m => m.Image)
-                }
+                @Html.TextBoxFor(m => m.Image, new { @class = "form-control", type = "file", id = "uploadedImage" })
+                @Html.ValidationMessageFor(m => m.Image)
             </div>
             <input type="submit" class="btn btn-primary" Value="Save Changes" />
             @Html.ActionLink("Cancel", "Index", "Badge", null, new { @class = "btn-danger btn" })

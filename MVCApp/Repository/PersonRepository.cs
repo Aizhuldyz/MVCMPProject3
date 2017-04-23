@@ -108,6 +108,11 @@ namespace MVCApp.Repository
             return persons;
         }
 
+        public Person FindByFullName(Func<Person, bool> predicate)
+        {
+            var person = _context.Persons.Where(predicate).OrderBy(x => x.BirthDate).FirstOrDefault();
+            return person;
+        }
 
     }
 }

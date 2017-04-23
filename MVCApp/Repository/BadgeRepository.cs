@@ -71,6 +71,18 @@ namespace MVCApp.Repository
             return false;
         }
 
+        public List<Badge> FindAll(Func<Badge, bool> predicate)
+        {
+            var badges = _context.Badges.Where(predicate).ToList();
+            return badges;
+        }
+
+        public Badge FindSingle(Func<Badge, bool> predicate)
+        {
+            var badge = _context.Badges.Where(predicate).FirstOrDefault();
+            return badge;
+        }
+
         public bool Delete(int id)
         {
             try

@@ -36,7 +36,16 @@ namespace MVCApp.Controllers
             return View(personViewModels);
         }
 
+        [Route("user/{id:decimal}/delete")]
+        public ActionResult DeleteById(int id)
+        {
+            if (_personRepository.Delete(id))
+            {
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
 
+            return Json(new { error = true }, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         public ActionResult Delete(int id)
@@ -47,6 +56,13 @@ namespace MVCApp.Controllers
             }
 
             return Json(new {error = true});
+        }
+
+
+        [Route("create-user")]
+        public ActionResult Create()
+        {
+            return View("Partial/_CreatePersonForm");
         }
 
         [HttpPost]
@@ -79,6 +95,18 @@ namespace MVCApp.Controllers
             return PartialView("Partial/_PersonTableRow", newPersonViewModel);
         }
 
+
+        public ActionResult EditById(int id)
+        {
+            var person = _personRepository.Get(id);
+            if (person == null)
+            {
+                return HttpNotFound();
+            }
+
+            var personViewModel = Mapper.Map<Person, PersonEditViewModel>(person);
+            return View("Partial/_EditPersonForm", personViewModel);
+        }
 
         public ActionResult Edit(int id)
         {
@@ -187,11 +215,35 @@ namespace MVCApp.Controllers
             return new HttpStatusCodeResult(500);
         }
 
+        [Route("users")]
+        public ActionResult FindAll()
+        {
+            var persons = _personRepository.GetAll().ToList();
+            var personViewModels = Mapper.Map<List<Person>, List<PersonViewModel>>(persons);
+            return View("Partial/_Personlist", personViewModels);
+        }
+
         public ActionResult FindByName(string name)
         {
             var persons = _personRepository.FindAll(person => person.Name.Contains(name));
             var personViewModels = Mapper.Map<List<Person>, List<PersonViewModel>>(persons);            
-            return View("Partial/_PersonDetails", personViewModels);
+            return View("Partial/_Personlist", personViewModels);
+        }
+
+        public ActionResult FindByFullName(string name)
+        {
+            var fullName = name.Replace("_", " ");
+            var person = _personRepository.FindByFullName(p => p.Name.Equals(fullName));
+            var personViewModel = Mapper.Map<Person, PersonViewModel>(person);
+            return View("Partial/_PersonDetails", personViewModel);
+        }
+
+        [Route("user/{id:decimal}")]
+        public ActionResult FindById(int id)
+        {
+            var person = _personRepository.Get(id);
+            var personViewModel = Mapper.Map<Person, PersonViewModel>(person);
+            return View("Partial/_PersonDetails", personViewModel);
         }
 
         private string GetPhotoPath(int personId)

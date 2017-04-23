@@ -15,7 +15,7 @@ namespace MVCApp.ViewModels
         [DisplayName("Title")]
         [Required]
         [StringLength(50, ErrorMessage = "Badge title cannot be more than 50 chars")]
-        [RegularExpression("^[A-Za-z0-9 -]+$]", ErrorMessage = "Title is not valid")]
+        [RegularExpression("[a-zA-z0-9 -]+", ErrorMessage = "Title is not valid")]
         public string Title { get; set; }
 
         [DisplayName("Description")]

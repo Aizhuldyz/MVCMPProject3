@@ -1,0 +1,15 @@
+﻿
+@model IEnumerable<MVCApp.ViewModels.PersonViewModel>
+<div class="col-md-6">
+    <table id="person_table" class="table table-striped">
+        <tr class="table-header">
+            <th>Name</th>
+        </tr>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td name="name">@person.Name</td>
+            </tr>
+        }
+    </table>
+</div>

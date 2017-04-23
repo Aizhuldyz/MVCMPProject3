@@ -1,0 +1,15 @@
+﻿
+@model IEnumerable<MVCApp.ViewModels.BadgeViewModel>
+<div class="col-md-6">
+    <table id="person_table" class="table table-striped">
+        <tr class="table-header">
+            <th>Name</th>
+        </tr>
+        @foreach (var badge in Model)
+        {
+            <tr>
+                <td name="name">@badge.Title</td>
+            </tr>
+        }
+    </table>
+</div>

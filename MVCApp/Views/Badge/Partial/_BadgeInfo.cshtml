@@ -1,28 +1,27 @@
 ﻿@model MVCApp.ViewModels.BadgeViewModel
-   
 
-<div class="modal-header">
-    <h4>Badge Info</h4>
-</div>
-<div class="modal-body">
-    <div class="container col-md-12">
-        <div class="row">
-            <div class="col-md-5">
-               <img src="@Url.Action("GetImage", "Badge", new {badgeId = @Model.Id, fileName = @Model.ImageUrl})" class="infoImg img-rounded" />        
-            </div>
-            <div class="col-md-5">
-                <div class="col-lg-11">
-                    <p><strong>Title: </strong> </p>
-                    <span>@Model.Title</span><p></p>
+@if (Model != null)
+{
+    <div class="modal-body">
+        <div class="container col-md-12">
+            <div class="row">
+                <div class="col-md-5">
+                    <img src="@Url.Action("GetImage", "Badge", new {badgeId = @Model.Id, fileName = @Model.ImageUrl})" class="infoImg img-rounded"/>
                 </div>
-                <div class="col-lg-11">
-                    <p> <strong>Description: </strong></p>
-                    <span>@Model.Description</span>
+                <div class="col-md-5">
+                    <div class="col-lg-11">
+                        <p><strong>Title: </strong>
+                        </p>
+                        <span>@Model.Title</span>
+                        <p></p>
+                    </div>
+                    <div class="col-lg-11">
+                        <p> <strong>Description: </strong>
+                        </p>
+                        <span>@Model.Description</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="modal-footer">
-    <button id ="close_badge_modal" class="btn" data-dismiss="modal">Close</button>
-</div>
+}

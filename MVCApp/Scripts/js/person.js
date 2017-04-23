@@ -114,7 +114,7 @@
             e.preventDefault();
             var badgeId = $(e.currentTarget).attr("img_id");
             $.ajax({
-                url: "Badge/GetBadgeInfo?id=" + badgeId,
+                url: "/MVCApp/Badge/GetBadgeInfo?id=" + badgeId,
                 type: "GET",
                 success: function (data, status, xhr) {
                     $("#badgeInfo").html(data);

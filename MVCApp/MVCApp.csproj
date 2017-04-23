@@ -335,6 +335,10 @@
     <Content Include="Views\Person\Partial\_AddNewBadge.cshtml" />
     <Content Include="Views\Badge\Partial\_BadgeInfo.cshtml" />
     <Content Include="Views\Person\Partial\_PersonDetails.cshtml" />
+    <Content Include="Views\Person\Partial\_PersonList.cshtml" />
+    <Content Include="Views\Badge\Partial\_BadgeList.cshtml" />
+    <Content Include="Views\Badge\Partial\_BadgeDetails.cshtml" />
+    <Content Include="Views\Badge\Partial\_BadgeInfoModal.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
