@@ -33,20 +33,19 @@ namespace MVCApp.Controllers
         {
             var persons = _personRepository.GetAll();
             var personViewModels = Mapper.Map<IEnumerable<Person>, IEnumerable<PersonViewModel>>(persons);
-
             return View(personViewModels);
         }
 
         [HttpPost]
         [Route("user/{id:decimal}/delete")]        
         [LogAction]
+        [HandleException]
         public ActionResult Delete(int id)
         {
             if (_personRepository.Delete(id))
             {
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
-
             return Json(new { error = true }, JsonRequestBehavior.AllowGet);
         }
 
@@ -61,6 +60,7 @@ namespace MVCApp.Controllers
         [HttpPost]
         [ValidateModelState]
         [LogAction]
+        [HandleException]
         public ActionResult Create(PersonCreateViewModel person)
         {
             var newPerson = new Person
@@ -129,7 +129,6 @@ namespace MVCApp.Controllers
             {
                 var fileName = Path.GetFileName(editPerson.Photo.FileName);
                 person.PhotoUrl = fileName;
-
                 var path = GetPhotoPath(editPerson.Id);
                 var photoPath = path + "/" + fileName;
                 Directory.CreateDirectory(path);

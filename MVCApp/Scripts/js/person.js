@@ -25,15 +25,19 @@
                             contentType: false,
                             data: formData,
                             datatype: "json",
-                            success: function (data, status, xhr) {                                
+                            success: function (data, status, xhr) {
+                                if (data.validationError) {
+                                    var errors = $.parseJSON(data.validationError);
+                                    validator.showErrors(errors);
+                                } else {
                                     $("#person_name").val("");
                                     $("#birthdate").val("");
                                     $("#uploadedPhoto").val("");
-                                    $("table#person_table tr:last").after(data);                                    
+                                    $("table#person_table tr:last").after(data);
+                                }
                             },
                             error: function(xhr, status, error) {
-                                var errors = $.parseJSON(error);
-                                validator.showErrors(errors);
+                                alert("Error occured while adding a person");
                             }
                         });
                     }
@@ -162,13 +166,15 @@ $(document).on("submit", "#person_form_edit", function (e) {
                 success: function (data, status, xhr) {
                     if (data.success) {
                         location.reload();
+                    } else if (data.validationError) {
+                        var errors = $.parseJSON(data.validationError);
+                        validator.showErrors(errors);
                     } else {
                         alert("Error Occured while updating person");
                     }
                 },
                 error: function(xhr, status, error) {
-                    var errors = $.parseJSON(error);
-                    validator.showErrors(errors);
+                    alert("Error Occured while updating person");
                 }
             });
         }

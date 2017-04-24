@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using MVCApp.FilterAttributes;
 
 namespace MVCApp
 {
@@ -8,6 +9,7 @@ namespace MVCApp
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new HandleExceptionAttribute());
         }
     }
 }

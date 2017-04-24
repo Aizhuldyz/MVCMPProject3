@@ -212,6 +212,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="FilterAttributes\HandleExceptionAttribute.cs" />
     <Compile Include="FilterAttributes\LogActionAttribute.cs" />
     <Compile Include="FilterAttributes\ValidateModelStateAttribute.cs" />
     <Compile Include="Global.asax.cs">

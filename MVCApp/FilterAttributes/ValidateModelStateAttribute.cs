@@ -21,10 +21,12 @@ namespace MVCApp.FilterAttributes
 
 
                 errors.Remove("Id");
+                errors.Remove("DeletePhoto");
                 var json = new JavaScriptSerializer().Serialize(errors);
-
-                // send 400 status code (Bad Request)
-                filterContext.Result = new HttpStatusCodeResult((int)HttpStatusCode.BadRequest, json);
+                filterContext.Result = new JsonResult
+                {
+                    Data = new { success = false, validationError = json}
+                };
             }
 
             base.OnActionExecuting(filterContext);
