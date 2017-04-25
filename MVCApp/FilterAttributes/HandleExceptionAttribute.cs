@@ -14,18 +14,31 @@ namespace MVCApp.FilterAttributes
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public override void OnException(ExceptionContext filterContext)
         {
-            if (filterContext.HttpContext.Request.IsAjaxRequest() && filterContext.Exception != null)
+            if (filterContext.Exception != null)
             {
-                filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                filterContext.Result = new JsonResult
+                if (filterContext.HttpContext.Request.IsAjaxRequest())
                 {
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                    Data = new
+                    filterContext.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                    filterContext.Result = new JsonResult
                     {
-                        filterContext.Exception.Message,
-                        filterContext.Exception.StackTrace
-                    }
-                };
+                        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                        Data = new
+                        {
+                            filterContext.Exception.Message,
+                            filterContext.Exception.StackTrace
+                        }
+                    };
+                    
+                }
+                else
+                {
+                    filterContext.ExceptionHandled = true;
+                    filterContext.Result = new ViewResult
+                    {
+                        ViewName = "~/Views/Shared/Error.cshtml"
+                    };
+                }
+
                 filterContext.ExceptionHandled = true;
                 var controllerName = filterContext.RouteData.Values["controller"];
                 var actionName = filterContext.RouteData.Values["action"];

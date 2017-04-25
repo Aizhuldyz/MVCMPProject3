@@ -39,7 +39,6 @@ namespace MVCApp.Controllers
         [HttpPost]
         [Route("user/{id:decimal}/delete")]        
         [LogAction]
-        [HandleException]
         public ActionResult Delete(int id)
         {
             if (_personRepository.Delete(id))
@@ -60,7 +59,6 @@ namespace MVCApp.Controllers
         [HttpPost]
         [ValidateModelState]
         [LogAction]
-        [HandleException]
         public ActionResult Create(PersonCreateViewModel person)
         {
             var newPerson = new Person
@@ -112,7 +110,6 @@ namespace MVCApp.Controllers
         [HttpPost]
         [ValidateModelState]
         [LogAction]
-        [HandleException]
         public ActionResult Edit(PersonEditViewModel editPerson)
         {
             var person = Mapper.Map<PersonEditViewModel, Person>(editPerson);
@@ -191,7 +188,6 @@ namespace MVCApp.Controllers
 
         [HttpPost]
         [LogAction]
-        [HandleException]
         public ActionResult AddRecognition(AddNewBadgeViewModel recognition)
         {
             if (_recognitionRepository.Exists(recognition.PersonId, recognition.BadgeId))
