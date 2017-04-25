@@ -10,6 +10,8 @@ namespace MVCApp.FilterAttributes
 {
     public class HandleExceptionAttribute : HandleErrorAttribute
     {
+
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public override void OnException(ExceptionContext filterContext)
         {
             if (filterContext.HttpContext.Request.IsAjaxRequest() && filterContext.Exception != null)
@@ -25,6 +27,10 @@ namespace MVCApp.FilterAttributes
                     }
                 };
                 filterContext.ExceptionHandled = true;
+                var controllerName = filterContext.RouteData.Values["controller"];
+                var actionName = filterContext.RouteData.Values["action"];
+                Log.Error(
+                    $"Exception occured in {actionName} of {controllerName} controller on {DateTime.Now:MM/dd/yyyy}, exceptionMessage : {filterContext.Exception.Message}");
             }
             else
             {

@@ -11,8 +11,6 @@ namespace MVCApp.Repository
     public class BadgeRepository
     {
         private readonly ApplicationDbContext _context;
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 
         public BadgeRepository()
         {
@@ -21,16 +19,7 @@ namespace MVCApp.Repository
 
         public Badge Get(int id)
         {
-            try
-            {
-                return _context.Badges.FirstOrDefault(x => x.Id == id);
-            }
-            catch (DbException e)
-            {
-                Log.Error($"Error Occured while retrieving a Badge with id {id}: {e.Message}");
-                return null;
-            }
-
+            return _context.Badges.FirstOrDefault(x => x.Id == id);
         }
 
         public List<Badge> GetAll()
@@ -40,35 +29,17 @@ namespace MVCApp.Repository
 
         public void Add(Badge badge)
         {
-            try
-            {
-                _context.Badges.Add(badge);
-                _context.SaveChanges();
-            }
-            catch (DbException e)
-            {
-                Log.Error($"Error Occured while adding an entry to Badge with title {badge.Title}: {e.Message}");
-            }
+            _context.Badges.Add(badge);
+            _context.SaveChanges();
         }
 
         public bool Update(Badge badge)
         {
             var oldPerson = Get(badge.Id);
-            if (oldPerson != null)
-            {
-                try
-                {
-                    _context.Badges.AddOrUpdate(badge);
-                    _context.SaveChanges();
-                }
-                catch (DbException e)
-                {
-                    Log.Error($"Error Occured while updating Person with id: {badge.Id}: {e.Message}");
-                    return false;
-                }
-                return true;
-            }
-            return false;
+            if (oldPerson == null) return false;
+            _context.Badges.AddOrUpdate(badge);
+            _context.SaveChanges();
+            return true;
         }
 
         public List<Badge> FindAll(Func<Badge, bool> predicate)
@@ -85,18 +56,11 @@ namespace MVCApp.Repository
 
         public bool Delete(int id)
         {
-            try
-            {
-                var badge = _context.Badges.FirstOrDefault(x => x.Id == id);
-                _context.Badges.Remove(badge);
-                _context.SaveChanges();
-                return true;
-            }
-            catch (DbException e)
-            {
-                Log.Error($"Error Occured while deleting an entry from Badge with id {id}: {e.Message}");
-                return false;
-            }
+            var badge = _context.Badges.FirstOrDefault(x => x.Id == id);
+            if (badge == null) return false;
+            _context.Badges.Remove(badge);
+            _context.SaveChanges();
+            return true;
         }
     }
 }

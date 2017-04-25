@@ -93,11 +93,6 @@ namespace MVCApp.Controllers
         public ActionResult EditById(int id)
         {
             var person = _personRepository.Get(id);
-            if (person == null)
-            {
-                return HttpNotFound();
-            }
-
             var personViewModel = Mapper.Map<Person, PersonEditViewModel>(person);
             return View("Partial/_EditPersonForm", personViewModel);
         }
@@ -117,6 +112,7 @@ namespace MVCApp.Controllers
         [HttpPost]
         [ValidateModelState]
         [LogAction]
+        [HandleException]
         public ActionResult Edit(PersonEditViewModel editPerson)
         {
             var person = Mapper.Map<PersonEditViewModel, Person>(editPerson);
@@ -166,7 +162,7 @@ namespace MVCApp.Controllers
                 var recognitions = _recognitionRepository.GetByPersonId(p.Id).ToList();
                 if (recognitions.Count != 0)
                 {
-                    txtBuilder.AppendLine(" : " + String.Join(",", recognitions.Select(x=>x.Badge.Title).ToList()));
+                    txtBuilder.AppendLine(" : " + string.Join(",", recognitions.Select(x=>x.Badge.Title).ToList()));
                 }
                 else
                 {
@@ -195,6 +191,7 @@ namespace MVCApp.Controllers
 
         [HttpPost]
         [LogAction]
+        [HandleException]
         public ActionResult AddRecognition(AddNewBadgeViewModel recognition)
         {
             if (_recognitionRepository.Exists(recognition.PersonId, recognition.BadgeId))
@@ -208,7 +205,7 @@ namespace MVCApp.Controllers
             }
             if (_recognitionRepository.Add(recognition.PersonId, recognition.BadgeId))
                 return Json(new {success = true});
-            return new HttpStatusCodeResult(500);
+            return Json(new { error = true });
         }
 
         [Route("users")]

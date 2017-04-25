@@ -35,6 +35,7 @@ namespace MVCApp.Controllers
         [Route("award/{id:decimal}/delete")]
         [HttpPost]
         [LogAction]
+        [HandleException]
         public ActionResult Delete(int id)
         {
             if (_badgeRepository.Delete(id))
@@ -55,6 +56,7 @@ namespace MVCApp.Controllers
         [Route("create-award")]
         [HttpPost]
         [LogAction]
+        [HandleException]
         public ActionResult Add(BadgeCreateViewModel badge)
         {
             var newBadge = Mapper.Map<BadgeCreateViewModel, Badge>(badge);
@@ -102,6 +104,7 @@ namespace MVCApp.Controllers
         [Route("award/{id:decimal}/edit")]
         [HttpPost]
         [LogAction]
+        [HandleException]
         public ActionResult Edit(BadgeEditViewModel badge)
         {
             if (badge.Image != null)
@@ -124,6 +127,7 @@ namespace MVCApp.Controllers
         }
 
         [LogAction]
+        [HandleException]
         public ActionResult GetBadgeInfo(int id)
         {
             var badge = _badgeRepository.Get(id);
