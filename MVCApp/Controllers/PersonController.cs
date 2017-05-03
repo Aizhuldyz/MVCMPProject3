@@ -33,7 +33,16 @@ namespace MVCApp.Controllers
         {
             var persons = _personRepository.GetAll();
             var personViewModels = Mapper.Map<IEnumerable<Person>, IEnumerable<PersonViewModel>>(persons);
-            return View(personViewModels);
+            if (User.IsInRole("Admin"))
+            {
+                return View(personViewModels);
+            }
+            if (User.IsInRole("Users"))
+            {
+                return View("Partial/_PersonlistDetailed", personViewModels);
+            }
+
+            return View("Partial/_Personlist", personViewModels);
         }
 
         [HttpPost]
@@ -58,6 +67,7 @@ namespace MVCApp.Controllers
 
         [HttpPost]
         [ValidateModelState]
+        [ValidateAntiForgeryToken]
         [LogAction]
         public ActionResult Create(PersonCreateViewModel person)
         {
@@ -95,6 +105,7 @@ namespace MVCApp.Controllers
             return View("Partial/_EditPersonForm", personViewModel);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             var person = _personRepository.Get(id);
@@ -110,6 +121,7 @@ namespace MVCApp.Controllers
         [HttpPost]
         [ValidateModelState]
         [LogAction]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(PersonEditViewModel editPerson)
         {
             var person = Mapper.Map<PersonEditViewModel, Person>(editPerson);
@@ -136,6 +148,7 @@ namespace MVCApp.Controllers
         }
 
         [LogAction]
+        [AllowAnonymous]
         public ActionResult GetPhoto(int personId, string fileName)
         {
             if (fileName == null)
@@ -206,6 +219,7 @@ namespace MVCApp.Controllers
 
         [Route("users")]
         [LogAction]
+        [AllowAnonymous]
         public ActionResult FindAll()
         {
             var persons = _personRepository.GetAll().ToList();
@@ -214,6 +228,7 @@ namespace MVCApp.Controllers
         }
 
         [LogAction]
+        [AllowAnonymous]
         public ActionResult FindByName(string name)
         {
             var persons = _personRepository.FindAll(person => person.Name.Contains(name));
@@ -223,6 +238,7 @@ namespace MVCApp.Controllers
 
 
         [LogAction]
+        [AllowAnonymous]
         public ActionResult FindByFullName(string name)
         {
             var fullName = name.Replace("_", " ");
@@ -233,6 +249,7 @@ namespace MVCApp.Controllers
 
         [Route("user/{id:decimal}")]
         [LogAction]
+        [AllowAnonymous]
         public ActionResult FindById(int id)
         {
             var person = _personRepository.Get(id);

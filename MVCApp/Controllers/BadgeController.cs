@@ -15,6 +15,7 @@ using MVCApp.ViewModels;
 
 namespace MVCApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BadgeController : Controller
     {
         private readonly BadgeRepository _badgeRepository;
@@ -55,6 +56,7 @@ namespace MVCApp.Controllers
         [Route("create-award")]
         [HttpPost]
         [LogAction]
+        [ValidateAntiForgeryToken]
         public ActionResult Add(BadgeCreateViewModel badge)
         {
             var newBadge = Mapper.Map<BadgeCreateViewModel, Badge>(badge);
@@ -78,6 +80,8 @@ namespace MVCApp.Controllers
         }
 
         [LogAction]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Users, Admin")]
         public ActionResult GetImage(int badgeId, string fileName)
         {
             var photoPath = GetImagePath(badgeId) + "/" + fileName;
@@ -102,6 +106,7 @@ namespace MVCApp.Controllers
         [Route("award/{id:decimal}/edit")]
         [HttpPost]
         [LogAction]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(BadgeEditViewModel badge)
         {
             if (badge.Image != null)

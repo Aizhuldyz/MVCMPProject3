@@ -18,6 +18,8 @@
                         formData.append("Name", name);
                         var birthdate = $("#birthdate").val();
                         formData.append("BirthDate", birthdate);
+                        var verToken = $("input[name=__RequestVerificationToken]").val();
+                        formData.append("__RequestVerificationToken", verToken);
                         $.ajax({
                             url: "Person/Create",
                             type: "POST",
@@ -152,6 +154,8 @@ $(document).on("submit", "#person_form_edit", function (e) {
             formData.append("Name", name);
             var birthdate = $("#birthdate").val();
             formData.append("BirthDate", birthdate);
+            var verToken = $("input[name=__RequestVerificationToken]").val();
+            formData.append("__RequestVerificationToken", verToken);
             var deletePhoto = $("#delete_check").prop("checked");
             if (deletePhoto == undefined)
                 deletePhoto = false;
@@ -188,12 +192,14 @@ $(document).on("submit", "#add_badge_form", function (e) {
     var validator = $("#add_badge_form").data("validator");
     var personId = $("#person_name").attr("person-id");
     var selectedBadgeId = $("#badge_dropdown").val();
+    var verToken = $("input[name=__RequestVerificationToken]").val();
     $.ajax({
         url: "Person/AddRecognition",
         type: "POST",
         data: {
             personId : personId,
-            badgeId : selectedBadgeId
+            badgeId: selectedBadgeId,
+            __RequestVerificationToken: verToken
         },
         datatype: "json",
         success: function (data, status, xhr) {

@@ -13,6 +13,7 @@
     <div class="col-md-12 container-table">
         @using (Html.BeginForm("Edit", "Badge", FormMethod.Post, new { @class = "form-horizontal col-md-12", name = "edit_badge", enctype = "multipart/form-data" }))
         {
+            @Html.AntiForgeryToken()
             <div class="form-group">
                 @Html.LabelFor(m => m.Title)
                 @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "name", id = "person_name", edit_id = @Model.Id })

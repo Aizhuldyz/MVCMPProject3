@@ -1,12 +1,12 @@
-﻿
-@model IEnumerable<MVCApp.ViewModels.PersonViewModel>
-<div class="col-md-6">
+﻿@model IEnumerable<MVCApp.ViewModels.PersonViewModel>
+<div class="col-md-8">
     <table id="person_table" class="table table-striped">
         <tr class="table-header">
             <th>Photo</th>
             <th>Name</th>
             <th>Birthdate</th>
             <th>Age</th>
+            <th>Badges</th>
         </tr>
         @foreach (var person in Model)
         {
@@ -17,6 +17,17 @@
                 <td name="name">@person.Name</td>
                 <td name="birthDate">@person.BirthDate.ToString("MM/dd/yyyy")</td>
                 <td>@person.Age</td>
+                <td>
+                    <div class="add_badge_container">
+                        @foreach (var badge in person.Badges)
+                        {
+                            <div class="badge_item">
+                                <img img_id="@badge.Id" src="@Url.Action("GetImage", "Badge", new {badgeId = @badge.Id, fileName = @badge.ImageUrl})"
+                                     title="@badge.Title" class="photoImg img-circle" />
+                            </div>
+                        }
+                    </div>
+                </td>
             </tr>
         }
     </table>

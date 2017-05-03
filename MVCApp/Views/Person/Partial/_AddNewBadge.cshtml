@@ -2,23 +2,24 @@
 
 <h3>Add New Badge</h3>
 <form id="add_badge_form" class="form-horizontal col-md-12">
+    @Html.AntiForgeryToken()
     <div class="form-group">
         @Html.LabelFor(m => m.PersonName)
-        @Html.TextBoxFor(m => m.PersonName, new { @class = "form-control", id = "person_name", person_id=@Model.PersonId, @readonly="true" })
+        @Html.TextBoxFor(m => m.PersonName, new {@class = "form-control", id = "person_name", person_id = @Model.PersonId, @readonly = "true"})
         @Html.ValidationMessageFor(m => m.PersonName)
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Badges)
         @{
             var badgesToSelect = Model.Badges.Select(i => new SelectListItem()
-            {           
+            {
                 Text = i.Title,
                 Value = i.Id + ""
             });
         }
-        @Html.DropDownListFor(m => m.Badges,badgesToSelect, new {@class = "form-control", id="badge_dropdown"})
+        @Html.DropDownListFor(m => m.Badges, badgesToSelect, new {@class = "form-control", id = "badge_dropdown"})
         @Html.ValidationMessageFor(m => m.Badges)
     </div>
-    <input type="submit" class="btn btn-primary" Value="Add Badge" />
-    @Html.ActionLink("Cancel", "Index", "Person", null, new { @class = "btn-danger btn" })
+    <input type="submit" class="btn btn-primary" Value="Add Badge"/>
+    @Html.ActionLink("Cancel", "Index", "Person", null, new {@class = "btn-danger btn"})
 </form>

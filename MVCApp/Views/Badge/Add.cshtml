@@ -12,8 +12,9 @@
 }
 <body>
     <div class="col-md-12 container-table">
-            @using (Html.BeginForm("Add", "Badge", FormMethod.Post, new { @class = "form-horizontal col-md-12", name="add_badge" ,enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("Add", "Badge", FormMethod.Post, new { @class = "form-horizontal col-md-12", name = "add_badge", enctype = "multipart/form-data" }))
             {
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     @Html.LabelFor(m => m.Title)
                     @Html.TextBoxFor(m => m.Title, new {@class="form-control", placeholder="title of a badge"})
