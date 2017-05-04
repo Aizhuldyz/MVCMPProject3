@@ -4,6 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
+using MVCApp.ViewModels;
+using AutoMapper;
+using Microsoft.AspNet.Identity;
+using MVCApp.Models;
+using PagedList;
 
 namespace MVCApp.Controllers
 {
@@ -32,10 +37,78 @@ namespace MVCApp.Controllers
                 _userManager = value;
             }
         }
-        public ActionResult Index()
+        public ActionResult Index(string searchStringUserNameOrEmail, string currentFilter, int? page)
         {
-            var users = UserManager.Users.ToList();
-            return View();
+            try
+            {
+                int intPage = 1;
+                int intPageSize = 5;
+                int intTotalPageCount = 0;
+
+                if (searchStringUserNameOrEmail != null)
+                {
+                    intPage = 1;
+                }
+                else
+                {
+                    if (currentFilter != null)
+                    {
+                        searchStringUserNameOrEmail = currentFilter;
+                        intPage = page ?? 1;
+                    }
+                    else
+                    {
+                        searchStringUserNameOrEmail = "";
+                        intPage = page ?? 1;
+                    }
+                }
+
+                ViewBag.CurrentFilter = searchStringUserNameOrEmail;
+
+                var intSkip = (intPage - 1) * intPageSize;
+
+                intTotalPageCount = UserManager.Users
+                    .Count(x => x.UserName.Contains(searchStringUserNameOrEmail));
+
+                var result = UserManager.Users
+                    .Where(x => x.UserName.Contains(searchStringUserNameOrEmail))
+                    .OrderBy(x => x.UserName)
+                    .Skip(intSkip)
+                    .Take(intPageSize)
+                    .ToList();
+
+                var users = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ExpandedUserViewModel>>(result).ToList();
+
+                foreach (var user in users)
+                {
+                    var role = UserManager.GetRoles(user.Id);
+                    user.Role = role.ElementAt(0);
+                }
+                // Set the number of pages
+                var usersPageList =
+                    new StaticPagedList<ExpandedUserViewModel>
+                    (
+                        users, intPage, intPageSize, intTotalPageCount
+                    );
+
+                return View(usersPageList);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, @"Error: " + ex);
+                var users= new List<ExpandedUserViewModel>();
+                return View(users.ToPagedList(1, 25));
+            }
         }
+
+         public ActionResult MakeAdmin(string userName)
+        {
+            var user = UserManager.FindByName(userName);
+            user.Roles.Clear();
+            UserManager.Update(user);
+            UserManager.AddToRole(user.Id, "Admin");
+            return RedirectToAction("Index");
+        }
+
     }
 }

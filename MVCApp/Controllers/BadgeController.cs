@@ -129,6 +129,8 @@ namespace MVCApp.Controllers
         }
 
         [LogAction]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Users, Admin")]
         public ActionResult GetBadgeInfo(int id)
         {
             var badge = _badgeRepository.Get(id);

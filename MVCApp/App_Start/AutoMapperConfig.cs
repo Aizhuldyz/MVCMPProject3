@@ -26,7 +26,7 @@ namespace MVCApp.App_Start
                 cfg.CreateMap<BadgeCreateViewModel, Badge>();
                 cfg.CreateMap<Badge, BadgeEditViewModel>();
                 cfg.CreateMap<BadgeEditViewModel, Badge>();
-
+                cfg.CreateMap<ApplicationUser, ExpandedUserViewModel>();
             });
 
         }

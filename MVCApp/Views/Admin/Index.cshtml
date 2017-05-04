@@ -1,7 +1,72 @@
-﻿
+﻿@model PagedList.IPagedList<MVCApp.ViewModels.ExpandedUserViewModel>
+@using PagedList.Mvc;
+
 @{
-    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<br />
+<br />
+@using (Html.BeginForm("Index", "Admin", FormMethod.Get))
+{
 
-<h2>Index</h2>
+    <div class="form-group">
+        Search:&nbsp; @Html.TextBox("searchStringUserNameOrEmail", ViewBag.CurrentFilter as string)
 
+        <input type="submit" value="Search" />
+    </div>
+}
+<br />
+<div class="col-md-11">
+    <table class="table table-striped">
+        <tr>
+            <th>
+                UserName
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Role 
+            </th>
+            <th>Edit</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+                @if (item.Role.Equals("Users"))
+                {
+                    <td>
+                        @Html.ActionLink("Make and Admin", "MakeAdmin", new {UserName = item.UserName})
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            </tr>
+        }
+    </table>
+
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model,
+    page => Url.Action("Index",
+        new
+        {
+            page,
+            searchStringUserNameOrEmail = ViewBag.searchStringUserNameOrEmail,
+            currentFilter = ViewBag.CurrentFilter
+        }))
+    <hr />
+</div>
