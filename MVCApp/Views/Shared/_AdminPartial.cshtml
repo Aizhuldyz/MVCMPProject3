@@ -1,0 +1,12 @@
+﻿
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <li>@Html.ActionLink("Person", "Index", "Person")</li>
+    <li>@Html.ActionLink("Badge", "Index", "Badge")</li>
+    <li>@Html.ActionLink("Administration", "Index", "Admin")</li>
+}
+else
+{
+    <li>@Html.ActionLink("Person", "Index", "Person")</li>
+}
