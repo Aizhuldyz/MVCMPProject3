@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Common;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Caching;
 using System.Web;
 using Microsoft.Ajax.Utilities;
 using MVCApp.Models;
@@ -13,6 +15,7 @@ namespace MVCApp.Repository
     public class PersonRepository
     {
         private readonly ApplicationDbContext _context;
+        
         public PersonRepository()
         {
             _context = new ApplicationDbContext();
@@ -20,7 +23,14 @@ namespace MVCApp.Repository
 
         public IEnumerable<Person> GetAll()
         {
-            return _context.Persons.ToList();
+            var persons = MemoryCache.Default["persons"] as IEnumerable<Person>;
+            if (persons == null)
+            {
+                persons = _context.Persons.ToList();
+                var cacheTimeOut = int.Parse(ConfigurationManager.AppSettings["cacheTimeOut"]);
+                MemoryCache.Default.Add("persons", persons, new DateTimeOffset(DateTime.Now.AddMinutes(cacheTimeOut)));
+            }
+            return persons;
         }
 
         public Person Get(int id)

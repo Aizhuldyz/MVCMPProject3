@@ -5,6 +5,10 @@
     <li>@Html.ActionLink("Person", "Index", "Person")</li>
     <li>@Html.ActionLink("Badge", "Index", "Badge")</li>
     <li>@Html.ActionLink("Administration", "Index", "Admin")</li>
+    if (User.IsInRole("Candidate"))
+    {
+        <li id="session_changes">@Html.ActionLink("Save Changes", "SessionChanges", "Admin")</li>
+    }
 }
 else
 {

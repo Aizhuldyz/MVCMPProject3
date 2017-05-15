@@ -4,12 +4,15 @@
         var url = window.location.pathname;
         $('ul.nav a[href="' + url + '"]').parent().addClass("active");
 
-        $.getJSON("Admin/SessionHasChanges", function (data) {
+        var sessionUrl = location.origin + "/MVCApp/Admin/SessionHasChanges";
+        $.getJSON(sessionUrl, function (data) {
             if (data != null) {
                 if (data.sessionHasChanged) {
                     $("#session_changes").show();
+                    $("#session_changes").attr("block_quit", true);
                 } else {
                     $("#session_changes").hide();
+                    $("#session_changes").attr("block_quit", false);
                 }
             }
         });
