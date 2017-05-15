@@ -21,6 +21,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @Html.Partial("_AdminPartial")
+                    <li id="session_changes">@Html.ActionLink("Save Changes", "SessionChanges", "Admin")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

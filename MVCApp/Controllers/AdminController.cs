@@ -8,6 +8,7 @@ using MVCApp.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MVCApp.Models;
+using MVCApp.Repository;
 using PagedList;
 
 namespace MVCApp.Controllers
@@ -16,9 +17,19 @@ namespace MVCApp.Controllers
     public class AdminController : Controller
     {
         private ApplicationUserManager _userManager;
+        private readonly CandidateBadgeRepository _badgeRepository;
 
         public AdminController()
         {
+            if (System.Web.HttpContext.Current.Session["candidateRepo"] == null)
+            {
+                _badgeRepository = new CandidateBadgeRepository();
+                System.Web.HttpContext.Current.Session["candidateRepo"] = _badgeRepository;
+            }
+            else
+            {
+                _badgeRepository = (CandidateBadgeRepository) System.Web.HttpContext.Current.Session["candidateRepo"];
+            }
         }
 
         public AdminController(ApplicationUserManager userManager)
@@ -108,6 +119,41 @@ namespace MVCApp.Controllers
             UserManager.Update(user);
             UserManager.AddToRole(user.Id, "Admin");
             return RedirectToAction("Index");
+        }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Candidate")]
+        public JsonResult SessionHasChanges()
+        {
+            if (_badgeRepository.HasChanges())
+            {
+                return Json(new { sessionHasChanged = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { sessionHasChanged = false }, JsonRequestBehavior.AllowGet);
+        }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Candidate")]
+        public ActionResult SessionChanges()
+        {
+            var modifiedChanges = _badgeRepository.GetModifiedBadges();
+            return View(modifiedChanges);
+        }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Candidate")]
+        public ActionResult SaveSessionChanges()
+        {
+            _badgeRepository.SaveChanges();
+            return RedirectToAction("Index", "Badge");
+        }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Candidate")]
+        public ActionResult CancelSessionChanges()
+        {
+            _badgeRepository.Cancel();
+            return RedirectToAction("Index", "Badge");
         }
 
     }

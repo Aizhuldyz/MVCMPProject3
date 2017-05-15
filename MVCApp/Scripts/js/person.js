@@ -4,6 +4,17 @@
         var url = window.location.pathname;
         $('ul.nav a[href="' + url + '"]').parent().addClass("active");
 
+        $.getJSON("Admin/SessionHasChanges", function (data) {
+            if (data != null) {
+                if (data.sessionHasChanged) {
+                    $("#session_changes").show();
+                } else {
+                    $("#session_changes").hide();
+                }
+            }
+        });
+
+
         $("#person_form")
             .on("submit",
                 function(e) {

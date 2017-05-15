@@ -16,6 +16,16 @@
                     if (data.success != null) {
                         var row = "table#badge_table tr#" + deleteId;
                         $(row).remove();
+                        alert("Badge was successfully deleted");
+                        $.getJSON("Admin/SessionHasChanges", function (data) {
+                            if (data != null) {
+                                if (data.sessionHasChanged) {
+                                    $("#session_changes").show();
+                                } else {
+                                    $("#session_changes").hide();
+                                }
+                            }
+                        });
                     } else {
                         alert("Error occured while deleting a badge!");
                     }

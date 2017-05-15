@@ -1,0 +1,28 @@
+﻿@model Dictionary<int, Tuple<MVCApp.Repository.OperationType, MVCApp.Models.Badge>>
+@{
+    ViewBag.Title = "SessionChanges";
+}
+<div class="page-header">
+    <h4>You need to save following changes to avoid losing them: </h4>
+</div>
+<div class="col-md-11">
+    <table id="session_changes" class="table table-striped">
+        <tr class="table-header">
+            <th>Id</th>
+            <th>Operation Type</th>
+            <th>Badge Title</th>
+        </tr>
+        @foreach (var change in Model)
+        {
+            <tr>
+                <td>@change.Key</td>
+                <td>@change.Value.Item1</td>
+                <td>@change.Value.Item2.Title</td>
+            </tr>
+        }
+    </table>
+    <br>
+    @Html.ActionLink("Save Changes", "SaveSessionChanges", "Admin", null, new {@class = "btn-default btn"})
+    @Html.ActionLink("Cancel", "CancelSessionChanges", "Admin", null, new { @class = "btn-danger btn" })
+</div>
+

@@ -22,6 +22,11 @@ namespace MVCApp.Repository
             _badgeRepository.SetAppContext(context);
         }
 
+        public Dictionary<int, Tuple<OperationType, Badge>> GetModifiedBadges()
+        {
+            return _modifiedBadges;
+        }
+
         public Badge Get(int id)
         {
             if (_modifiedBadges.Keys.Contains(id))
@@ -152,6 +157,11 @@ namespace MVCApp.Repository
                     _badgeRepository.Update(modifiedBadge);
                 }
             }
+            _modifiedBadges = new Dictionary<int, Tuple<OperationType, Badge>>();
+        }
+
+        public void Cancel()
+        {
             _modifiedBadges = new Dictionary<int, Tuple<OperationType, Badge>>();
         }
 

@@ -43,16 +43,6 @@ namespace MVCApp.Controllers
             _badgeRepository.SetAppContext(context);
         }
 
-        [OverrideAuthorization]
-        [Authorize(Roles = "Candidate")]
-        public JsonResult SessionHasChanges()
-        {
-            if (_badgeRepository.HasChanges())
-            {
-                return Json(new {sessionHasChanged = true});
-            }
-            return Json(new { sessionHasChanged = false });
-        }
 
 
         public ActionResult Index()
