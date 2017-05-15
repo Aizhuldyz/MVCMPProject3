@@ -253,6 +253,8 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Recognition.cs" />
     <Compile Include="Repository\BadgeRepository.cs" />
+    <Compile Include="Repository\CandidateBadgeRepository.cs" />
+    <Compile Include="Repository\IBadgeRepository.cs" />
     <Compile Include="Repository\PersonRepository.cs" />
     <Compile Include="Repository\RecognitionRepository.cs" />
     <Compile Include="Validation\BirthDateValidation.cs" />

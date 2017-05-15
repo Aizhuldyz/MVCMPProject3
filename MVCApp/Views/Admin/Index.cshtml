@@ -28,7 +28,10 @@
             <th>
                 Role 
             </th>
-            <th>Edit</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>Edit</th>
+            }
         </tr>
 
         @foreach (var item in Model)
@@ -43,15 +46,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Role)
                 </td>
-                @if (item.Role.Equals("Users"))
+                @if (item.Role.Equals("Users") && User.IsInRole("Admin"))
                 {
                     <td>
                         @Html.ActionLink("Make and Admin", "MakeAdmin", new {UserName = item.UserName})
                     </td>
-                }
-                else
-                {
-                    <td></td>
                 }
             </tr>
         }

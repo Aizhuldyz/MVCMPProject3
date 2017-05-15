@@ -36,7 +36,16 @@ namespace MVCApp.Migrations
                 manager.Create(role);
             }
 
-            if (!context.Users.Any(u => u.UserName == "admin@admin.com"))
+            if (!context.Roles.Any(r => r.Name == "Candidate"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "Candidate" };
+
+                manager.Create(role);
+            }
+
+            if (!context.Users.Any(u => u.UserName == "admin"))
             {
                 var store = new UserStore<ApplicationUser>(context);
                 var manager = new UserManager<ApplicationUser>(store);
@@ -44,6 +53,16 @@ namespace MVCApp.Migrations
 
                 manager.Create(user, "password123");
                 manager.AddToRole(user.Id, "Admin");
+            }
+
+            if (!context.Users.Any(u => u.UserName == "candidate"))
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+                var user = new ApplicationUser { UserName = "candidate", Email = "candidate@admin.com" };
+
+                manager.Create(user, "password123");
+                manager.AddToRole(user.Id, "Candidate");
             }
         }
     }

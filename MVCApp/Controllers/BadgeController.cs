@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using AutoMapper;
 using MVCApp.FilterAttributes;
 using MVCApp.Helper;
@@ -15,14 +16,44 @@ using MVCApp.ViewModels;
 
 namespace MVCApp.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Candidate")]
     public class BadgeController : Controller
     {
-        private readonly BadgeRepository _badgeRepository;
+        private readonly IBadgeRepository _badgeRepository;
+
         public BadgeController()
         {
-            _badgeRepository = new BadgeRepository();
+            var context = new ApplicationDbContext();
+            if (System.Web.HttpContext.Current.User.IsInRole("Candidate"))
+            {
+                if (System.Web.HttpContext.Current.Session["candidateRepo"] == null)
+                {
+                    _badgeRepository = new CandidateBadgeRepository();
+                    System.Web.HttpContext.Current.Session["candidateRepo"] = _badgeRepository;
+                }
+                else
+                {
+                    _badgeRepository = (IBadgeRepository)System.Web.HttpContext.Current.Session["candidateRepo"];
+                }
+            }
+            else
+            {
+                _badgeRepository = new BadgeRepository();
+            }
+            _badgeRepository.SetAppContext(context);
         }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Candidate")]
+        public JsonResult SessionHasChanges()
+        {
+            if (_badgeRepository.HasChanges())
+            {
+                return Json(new {sessionHasChanged = true});
+            }
+            return Json(new { sessionHasChanged = false });
+        }
+
 
         public ActionResult Index()
         {
@@ -81,7 +112,7 @@ namespace MVCApp.Controllers
 
         [LogAction]
         [OverrideAuthorization]
-        [Authorize(Roles = "Users, Admin")]
+        [Authorize(Roles = "Users, Admin, Candidate")]
         public ActionResult GetImage(int badgeId, string fileName)
         {
             var photoPath = GetImagePath(badgeId) + "/" + fileName;

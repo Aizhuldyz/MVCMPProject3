@@ -8,13 +8,13 @@ using MVCApp.Models;
 
 namespace MVCApp.Repository
 {
-    public class BadgeRepository
+    public class BadgeRepository : IBadgeRepository
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
 
-        public BadgeRepository()
+        public void SetAppContext(ApplicationDbContext context)
         {
-            _context = new ApplicationDbContext();
+            _context = context;
         }
 
         public Badge Get(int id)
@@ -61,6 +61,11 @@ namespace MVCApp.Repository
             _context.Badges.Remove(badge);
             _context.SaveChanges();
             return true;
+        }
+
+        public bool HasChanges()
+        {
+            return false;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace MVCApp.Controllers
             _badgeRepository = new BadgeRepository();
         }
 
-        [LogAction]
+        [LogAction]       
         public ActionResult Index()
         {
             var persons = _personRepository.GetAll();

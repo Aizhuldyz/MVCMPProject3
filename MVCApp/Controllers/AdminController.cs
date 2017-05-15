@@ -12,7 +12,7 @@ using PagedList;
 
 namespace MVCApp.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Candidate")]
     public class AdminController : Controller
     {
         private ApplicationUserManager _userManager;
