@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MVCApp.Models;
+using MVCApp.Repository;
 
 namespace MVCApp.Controllers
 {
@@ -392,6 +393,14 @@ namespace MVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            if (User.IsInRole("Candidate"))
+            {
+                var candidateBadgeRepository = System.Web.HttpContext.Current.Session["candidateRepo"] as CandidateBadgeRepository;
+                if (candidateBadgeRepository != null && candidateBadgeRepository.HasChanges())
+                {
+                    return RedirectToAction("SessionChanges", "Admin");
+                }
+            }
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
