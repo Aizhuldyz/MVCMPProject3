@@ -21,6 +21,11 @@ namespace MVCApp.Repository
             _context = new ApplicationDbContext();
         }
 
+        public PersonRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<Person> GetAll()
         {
             var persons = MemoryCache.Default["persons"] as IEnumerable<Person>;

@@ -18,6 +18,11 @@ namespace MVCApp.Repository
             _context = new ApplicationDbContext();
         }
 
+        public RecognitionRepository(ApplicationDbContext context)
+        {
+            _context =context;
+        }
+
         public bool Exists(int personId, int badgeId)
         {
             if (_context.Recognitions.FirstOrDefault(x => x.PersonId == personId && x.BadgeId == badgeId) != null)
