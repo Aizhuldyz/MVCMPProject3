@@ -1,0 +1,16 @@
+﻿
+@model IEnumerable<MVCApp.ViewModels.BadgeViewModel>
+<table id="badge_table" class="table table-striped">
+    <tr class="table-header">
+        <th>Image</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Edit</th>
+    </tr>
+    <tbody id="badge_table_body">
+        @foreach (var badge in Model)
+        {
+            @Html.Partial("Partial/_BadgeSingle", badge)
+        }
+    </tbody>
+</table>

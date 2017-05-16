@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MVCApp.ViewModels.BadgeViewModel>
+﻿@using MVCApp.ViewModels
+@model IEnumerable<MVCApp.ViewModels.BadgeViewModel>
 @{
     Layout = "_BadgeLayout.cshtml";
 }
@@ -8,31 +9,12 @@
 }
 
 <div class="col-md-12 container-table">
-    <div class="col-md-8 table-responsive row">
-        <table id="badge_table" class="table table-striped">
-            <tr class="table-header">
-                <th>Image</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Edit</th>
-            </tr>
-            @foreach (var badge in Model)
-            {
-                <tr id="@badge.Id">
-                    <td>
-                        <img src="@Url.Action("GetImage", "Badge", new {badgeId = @badge.Id, fileName = @badge.ImageUrl})" class="photoImg"/>
-                    </td>
-                    <td>@badge.Title</td>
-                    <td>@badge.Description</td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", "Badge", new {id = @badge.Id}, null) |
-                        <button name="delete_badge" delete_id="@badge.Id" class="btn btn-link">Delete</button>
-                    </td>
-                </tr>
-            }
-        </table>
-        
-        @Html.ActionLink("Add new Badge", "Add", "Badge", null, new { @class = "btn-primary btn" })
-    </div>    
-
+    <div class="col-md-4">
+        @Html.Partial("Add", new BadgeCreateViewModel())
+    </div>
+    <div id ="badgeList" class="col-md-8 table-responsive row">
+        @Html.Partial("Partial/_BadgeTable", Model)
+    </div>
+    
+    @Ajax.ActionLink("Refresh", "Index", new { }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "badgeList", InsertionMode = InsertionMode.Replace }, new { @class = "btn btn-default" })
 </div>

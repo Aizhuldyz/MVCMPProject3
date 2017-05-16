@@ -1,0 +1,13 @@
+﻿
+@model MVCApp.ViewModels.BadgeViewModel
+        <tr id="@Model.Id">
+            <td>
+                <img src="@Url.Action("GetImage", "Badge", new {badgeId = @Model.Id, fileName = @Model.ImageUrl})" class="photoImg"/>
+            </td>
+            <td>@Model.Title</td>
+            <td>@Model.Description</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", "Badge", new {id = @Model.Id}, null) |
+                <button name="delete_badge" delete_id="@Model.Id" class="btn btn-link">Delete</button>
+            </td>
+        </tr>

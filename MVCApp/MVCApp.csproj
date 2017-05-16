@@ -283,6 +283,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\js\badge.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -359,6 +361,8 @@
     <Content Include="Views\Shared\_AdminPartial.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\SessionChanges.cshtml" />
+    <Content Include="Views\Badge\Partial\_BadgeTable.cshtml" />
+    <Content Include="Views\Badge\Partial\_BadgeSingle.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

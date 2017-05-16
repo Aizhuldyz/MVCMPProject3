@@ -49,8 +49,12 @@ namespace MVCApp.Controllers
         {
             var badges = _badgeRepository.GetAll();
             var badgeViewModels = Mapper.Map<IEnumerable<Badge>, IEnumerable<BadgeViewModel>>(badges);
-
             ViewBag.PageName = "Badge";
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("Partial/_BadgeTable", badgeViewModels);
+            }
+                        
             return View(badgeViewModels);
         }
 
@@ -74,7 +78,6 @@ namespace MVCApp.Controllers
             return View(new BadgeCreateViewModel());
         }
 
-        [Route("create-award")]
         [HttpPost]
         [LogAction]
         [ValidateAntiForgeryToken]
@@ -97,7 +100,10 @@ namespace MVCApp.Controllers
                 badge.Image.SaveAs(imagePath);
             }
 
-            return RedirectToAction("Index");
+            if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
+
+            var badgeViewModel = Mapper.Map<Badge, BadgeViewModel>(newBadge);
+            return PartialView("Partial/_BadgeSingle", badgeViewModel);
         }
 
         [LogAction]

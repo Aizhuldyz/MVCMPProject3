@@ -27,12 +27,10 @@ namespace MVCApp.FilterAttributes
                             filterContext.Exception.Message,
                             filterContext.Exception.StackTrace
                         }
-                    };
-                    
+                    };                    
                 }
                 else
                 {
-                    filterContext.ExceptionHandled = true;
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/Error.cshtml"
