@@ -1,24 +1,52 @@
 ﻿$(document)
     .ready(
-    $(function () {
-        checkSessionChanges();
-        function checkSessionChanges(e) {
-            var sessionUrl = location.origin + "/MVCApp/Admin/SessionHasChanges";
+        $(function () {
+            checkSessionChanges();
 
-            $.getJSON(sessionUrl,
-                function (data) {
-                    if (data != null) {
-                        if (data.sessionHasChanged) {
-                            $("#session_changes").show();
-                            $("#session_changes").attr("block_quit", true);
-                        } else {
-                            $("#session_changes").hide();
-                            $("#session_changes").attr("block_quit", false);
+            function checkSessionChanges(e) {
+                var sessionUrl = location.origin + "/MVCApp/Admin/SessionHasChanges";
+
+                $.getJSON(sessionUrl,
+                    function (data) {
+                        if (data != null) {
+                            if (data.sessionHasChanged) {
+                                $("#session_changes").show();
+                                $("#session_changes").attr("block_quit", true);
+                            } else {
+                                $("#session_changes").hide();
+                                $("#session_changes").attr("block_quit", false);
+                            }
+                        }
+                    });
+            }
+
+
+                function getStatus() {
+                    var sessionUrl = location.origin + "/MVCApp/Admin/SessionHasChanges";
+                    return $.getJSON(sessionUrl).then(function(data) {
+                            return data.sessionHasChanged;
+                        });
+                };
+               
+
+                $.when(getStatus()).done(function(data) {
+                    if (data) {
+                        $(window).on("mouseover",
+                            (function() {
+                                window.onbeforeunload = null;
+                            }));
+                        $(window).on("mouseout",
+                            (function() {
+                                window.onbeforeunload = confirmLeave;
+                            }));
+
+                        function confirmLeave() {                            
+                            return "";
                         }
                     }
                 });
-        }
-        $("#badge_form")
+
+            $("#badge_form")
             .on("submit",
                 function (e) {
                     e.preventDefault();
@@ -61,38 +89,38 @@
                 });
 
 
-        $(document).on("click", 'button[name="delete_badge"]', function (e) {
-            deleteRow(e);
-        });
+            $(document).on("click", 'button[name="delete_badge"]', function (e) {
+                deleteRow(e);
+            });
 
 
-        function deleteRow(e) {
-            e.preventDefault();
-            var deleteId = $(e.currentTarget).attr("delete_id");
-            $.ajax({
-                url: "award/" + deleteId + "/delete",
-                type: "POST",
-                success: function (data, status, xhr) {
-                    if (data.success != null) {
-                        var row = "table#badge_table tr#" + deleteId;
-                        $(row).remove();
-                        alert("Badge was successfully deleted");
-                        $.getJSON("Admin/SessionHasChanges", function (data) {
-                            if (data != null) {
-                                if (data.sessionHasChanged) {
-                                    $("#session_changes").show();
-                                } else {
-                                    $("#session_changes").hide();
+            function deleteRow(e) {
+                e.preventDefault();
+                var deleteId = $(e.currentTarget).attr("delete_id");
+                $.ajax({
+                    url: "award/" + deleteId + "/delete",
+                    type: "POST",
+                    success: function (data, status, xhr) {
+                        if (data.success != null) {
+                            var row = "table#badge_table tr#" + deleteId;
+                            $(row).remove();
+                            alert("Badge was successfully deleted");
+                            $.getJSON("Admin/SessionHasChanges", function (data) {
+                                if (data != null) {
+                                    if (data.sessionHasChanged) {
+                                        $("#session_changes").show();
+                                    } else {
+                                        $("#session_changes").hide();
+                                    }
                                 }
-                            }
-                        });
-                    } else {
+                            });
+                        } else {
+                            alert("Error occured while deleting a badge!");
+                        }
+                    },
+                    error: function (xhr, status, error) {
                         alert("Error occured while deleting a badge!");
                     }
-                },
-                error: function (xhr, status, error) {
-                    alert("Error occured while deleting a badge!");
-                }
-            });
-        }
-    }));
+                });
+            }
+        }));
