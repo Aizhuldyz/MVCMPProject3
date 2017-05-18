@@ -59,7 +59,7 @@ namespace MVCApp.API.Controllers
             return new EnumerableQuery<Badge>(awards);
         }
 
-        [Route("awards/{name:regex(^[a-zA-Z]+_[a-zA-z]+$)}")]
+        [Route("award/{name:regex(^[a-zA-Z]+_[a-zA-z]+$)}")]
         public IHttpActionResult GetByFullName(string name)
         {
             var fullTitle = name.Replace("_", " ");

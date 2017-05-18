@@ -53,7 +53,7 @@ namespace MVCApp.API.Controllers
             return new EnumerableQuery<Person>(users);
         }
 
-        [Route("users/{name:regex(^[a-zA-Z]+_[a-zA-z]+$)}")]
+        [Route("user/{name:regex(^[a-zA-Z]+_[a-zA-z]+$)}")]
         public IHttpActionResult GetByFullName(string name)
         {
             var fullName = name.Replace("_", " ");
@@ -95,5 +95,24 @@ namespace MVCApp.API.Controllers
                 return NotFound();
             return Ok();
         }
+
+        [Route("user/{userId:decimal}/award/{awardId:decimal}")]
+        public IHttpActionResult PostAward(int userId, int awardId)
+        {
+            if (_personRepository.Get(userId) == null || _badgeRepository.Get(awardId) == null)
+            {
+                return NotFound();
+            }
+            if (_recognitionRepository.GetByPersonId(userId).Any(p => p.BadgeId == awardId))
+            {
+                return BadRequest("User already has that badge");
+            }
+            if (_recognitionRepository.Add(userId, awardId))
+            {
+                return Ok();
+            }
+            return InternalServerError();
+        }
+        
     }
 }
