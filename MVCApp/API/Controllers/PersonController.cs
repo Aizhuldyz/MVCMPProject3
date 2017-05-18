@@ -78,5 +78,22 @@ namespace MVCApp.API.Controllers
             }
             return response;
         }
+
+        [Route("user/{id:decimal}")]
+        public IHttpActionResult Put(int id, Person person)
+        {
+            person.Id = id;
+            if (!_personRepository.Update(person))
+                return NotFound();
+            return Ok();
+        }
+
+        [Route("user/{id:decimal}")]
+        public IHttpActionResult Delete(int id)
+        {
+            if (!_personRepository.Delete(id))
+                return NotFound();
+            return Ok();
+        }
     }
 }
