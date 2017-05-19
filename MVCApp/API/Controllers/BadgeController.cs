@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.OData;
 using AutoMapper;
@@ -68,19 +71,43 @@ namespace MVCApp.API.Controllers
         }
 
         [Route("award")]
-        public HttpResponseMessage Post(Badge award)
+        public HttpResponseMessage Post()
         {
-            _badgeRepository.Add(award);
+            var formCollection = HttpContext.Current.Request.Form;
             HttpResponseMessage response;
-            if (award.Id == 0)
+            if (formCollection["Title"] == null
+                || !HttpContext.Current.Request.Files.AllKeys.Any() ||
+                HttpContext.Current.Request.Files["Image"] == null)
             {
-                response = Request.CreateResponse(HttpStatusCode.ExpectationFailed, award);
+                response = Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             else
             {
-                response = Request.CreateResponse(HttpStatusCode.Created, award);
-                var uri = Url.Link("DefaultApi", new { Id = award.Id });
-                response.Headers.Location = new Uri(uri);
+                var httpPostedFile = HttpContext.Current.Request.Files["Image"];
+                var fileName = Path.GetFileName(httpPostedFile.FileName);
+                var award = new Badge
+                {
+                    Title = formCollection["Title"],
+                    Description = formCollection["Description"],
+                    ImageUrl = fileName
+                };
+                _badgeRepository.Add(award);
+                if (award.Id == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.ExpectationFailed, "error saving badge to db");
+                }
+                else
+                {
+                    var path =
+                        HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["BadgeImageUploadPath"] +
+                                                           award.Id);
+                    var imagePath = $"{path}/{fileName}";
+                    Directory.CreateDirectory(path);
+                    httpPostedFile.SaveAs(imagePath);
+                    response = Request.CreateResponse(HttpStatusCode.Created, award);
+                    var uri = Url.Link("DefaultApi", new {Id = award.Id});
+                    response.Headers.Location = new Uri(uri);
+                }                
             }
             return response;
         }
@@ -101,5 +128,6 @@ namespace MVCApp.API.Controllers
                 return NotFound();
             return Ok();
         }
+
     }
 }

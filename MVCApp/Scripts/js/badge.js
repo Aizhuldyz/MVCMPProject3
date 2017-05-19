@@ -2,7 +2,7 @@
     .ready(
         $(function () {
             checkSessionChanges();
-
+            
             function checkSessionChanges(e) {
                 var sessionUrl = location.origin + "/MVCApp/Admin/SessionHasChanges";
 
@@ -54,21 +54,22 @@
                     if (isValid) {
                         var validator = $("#badge_form").data("validator");
                         var formData = new FormData();
-                        var photo = $("#uploadedImage").get(0).files[0];
-                        formData.append("Image", photo);
+                        var image = $("#uploadedImage").get(0).files[0];
+                        formData.append("Image", image);
                         var name = $("#badgeTitle").val();
                         formData.append("Title", name);
                         var description = $("#badgeDescription").val();
                         formData.append("Description", description);
-                        var verToken = $("input[name=__RequestVerificationToken]").val();
-                        formData.append("__RequestVerificationToken", verToken);
+                        //var verToken = $("input[name=__RequestVerificationToken]").val();
+                        //formData.append("__RequestVerificationToken", verToken);
+                        var apiUri = "http://localhost/MVCApp/api";
                         $.ajax({
-                            url: "Badge/Add",
-                            type: "POST",
+                            url: apiUri+ "/award",
+                            type: "Post",
                             processData: false,
                             contentType: false,
                             data: formData,
-                            datatype: "json",
+                            dataType: "JSON",
                             success: function (data, status, xhr) {
                                 if (data.validationError) {
                                     var errors = $.parseJSON(data.validationError);
@@ -77,7 +78,7 @@
                                     $("#badgeTitle").val("");
                                     $("#badgeDescription").val("");
                                     $("#uploadedImage").val("");
-                                    $("table#badge_table tr:last").after(data);
+                                    $("table#badge_table tr:last").after(formatSingleBadgeRow(data));
                                     checkSessionChanges();
                                 }
                             },
@@ -88,6 +89,23 @@
                     }
                 });
 
+
+            function formatSingleBadgeRow(data) {
+                var row = $("<tr>", { id: data.Id });
+                row.append($("<td>").append($("<img>",
+                    {
+                        src: "/MVCApp/Badge/GetImage?badgeId=" + data.Id + "&fileName=" + data.ImageUrl,
+                        class: "photoImg"
+                    })));
+                row.append(
+                    $("<td>", { text: data.Title }));
+                row.append(
+                    $("<td>", { text: data.Description }));
+                row.append(
+                    $("<td>").append($("<a>", {href: "/MVCApp/award/" + data.Id + "/edit", text: "Edit |"})).append($("<button>",
+                        {name: "delete_badge", delete_id: data.Id, class: "btn btn-link", text: "Delete"})));
+                return row;
+            }
 
             $(document).on("click", 'button[name="delete_badge"]', function (e) {
                 deleteRow(e);
