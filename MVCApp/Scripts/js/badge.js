@@ -116,10 +116,10 @@
                 e.preventDefault();
                 var deleteId = $(e.currentTarget).attr("delete_id");
                 $.ajax({
-                    url: "award/" + deleteId + "/delete",
-                    type: "POST",
+                    url: "http://localhost/MVCApp/api/award/" + deleteId,
+                    type: "Delete",
                     success: function (data, status, xhr) {
-                        if (data.success != null) {
+                        if (xhr.status === 200) {
                             var row = "table#badge_table tr#" + deleteId;
                             $(row).remove();
                             alert("Badge was successfully deleted");
