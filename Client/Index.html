@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div>
+        <h2>All Awards</h2>
+        <ul id="awards"></ul>
+    </div>
+<div>
+    <h2>Search Awards by Id</h2>
+    <input type="text" id="awardId" size="5" placeholder="e.g 22"/>
+    <button id="searchAward">Search</button>
+    <p id="foundAward"></p>
+</div>
+    
+<div>
+    <h2>Search Awards by First Letters</h2>
+    <input type="text" id="awardFL" size="30" placeholder="e.g A, Medal_of_Glory, Honor" />
+    <button id="searchAwardByLetters">Search</button>
+    <p id="foundAwardBYFl"></p>
+</div>
+<div>
+        <h2>Add a new Award</h2>
+        <input type="text" id="awardTitle" size="15" placeholder="title"/><br/><br />
+        <input type="text" id="awardDescription" size="15" placeholder="description"/><br/><br />
+        <input type="file" id="awardImage" size="15" /><br/> <br />
+        
+        <button id="addAward">Add</button>
+        <p id="addedAward"></p>
+    </div>
+    <script src="Scripts/jquery-3.1.1.min.js"></script>
+    <script>
+        var uri = 'http://localhost/MVCApp/api',
+            $foundAward = $('#foundAward'),
+            $addedAward = $('#addedAward'),
+            $awards = $('#awards'),
+            $awardId = $('#awardId'),
+            $awardTitle = $('#awardTitle'),
+            $awardDescription = $('#awardDescription'),
+            $awardImage = $('#awardImage'),
+            $addAward = $('#addAward'),
+            $searchAward = $('#searchAward');
+
+        $(function () {
+            reloadData();
+        });
+
+        function reloadData() {
+            $.getJSON(uri + "/awards")
+                .done(function (data) {
+                    $awards.empty();
+                    $.each(data, function (key, item) {
+                        $('<li>', { text: formatItem(item) }).appendTo($awards);
+                    });
+            });
+        };
+
+        function formatItem(item) {
+            return item.Title + ', ' + item.Description + ', '+ item.ImageUrl;
+        };
+
+        $searchAward.click(function () {
+            var id = $awardId.val();
+            $.getJSON(uri + '/award/' + id)
+                .done(function (data) {
+                    $foundAward.text(formatItem(data));
+                })
+            .fail(function (jqXHR, textStatus, err) {
+                $foundAward.text('Error: ' + err);
+            });
+        });
+        $('#searchAwardByLetters').click(function () {
+            var fl = $('#awardFL').val();
+            var apiLink = '';
+            if (fl.indexOf("_") !== -1) {
+                apiLink = '/award/';
+            } else {
+                apiLink = '/awards/';
+            }
+            $.getJSON(uri + apiLink + fl)
+                .done(function (data) {
+                    $('#foundAwardBYFl').empty();
+                    if (data == null || data.length === 0) {
+                        $('#foundAwardBYFl').html("No award(s) were found");
+                    }else if (!data.isArray) {
+                        $('<li>', { text: formatItem(data) }).appendTo($('#foundAwardBYFl'));
+                    } else {
+                        $.each(data,
+                            function(key, item) {
+                                $('<li>', { text: formatItem(item) }).appendTo($('#foundAwardBYFl'));
+                            });
+                    }
+                })
+                    .fail(function (jqXHR, textStatus, err) {
+                    $('#foundAwardBYFl').text('Error: ' + err);
+                });
+        });
+
+        $addAward.click(function () {
+            var newAward = {
+                Title: $awardTitle.val(),
+                Description: $awardDescription.val(),
+                ImageUrl: $("#awardImage").get(0).files[0].name
+            };
+            $.ajax({
+                data: newAward,
+                type: 'post',
+                url: uri + '/award',
+                success: function (data){
+                    reloadData();
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
