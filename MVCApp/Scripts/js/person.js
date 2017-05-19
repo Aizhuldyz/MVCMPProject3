@@ -195,24 +195,29 @@ $(document).on("submit", "#add_badge_form", function (e) {
     var selectedBadgeId = $("#badge_dropdown").val();
     var verToken = $("input[name=__RequestVerificationToken]").val();
     $.ajax({
-        url: "Person/AddRecognition",
-        type: "POST",
+        url: "http://localhost/MVCApp/api/user/" + personId + "/award/" + selectedBadgeId,
+        type: "POST", 
         data: {
-            personId : personId,
-            badgeId: selectedBadgeId,
+            userId : personId,
+            awardId: selectedBadgeId,
             __RequestVerificationToken: verToken
         },
         datatype: "json",
         success: function (data, status, xhr) {
-            if (data.success) {
+            if (xhr.status === 200) {
                 location.reload();
-            } else {
-                var errors = $.parseJSON(data.message);
-                validator.showErrors(errors);
             }
         },
         error: function (xhr, status, error) {
-            alert("Error Occured while adding a badge");            
+            if (xhr.status === 400) {
+                var errorData = $.parseJSON(xhr.responseText);
+                var errors ={
+                    "Badges": errorData.Message
+                }
+                validator.showErrors(errors);
+            } else {
+                alert("Error Occured while adding a badge");
+            }
         }
         });
 });
