@@ -70,21 +70,7 @@ namespace MVCApp.API.Controllers
         [Route("award")]
         public HttpResponseMessage Post(Badge award)
         {
-            var httpRequest = HttpContext.Current.Request;
-            if (httpRequest.Files.Count == 0)
-            {
-                _badgeRepository.Add(award);
-            }
-            else
-            {
-                var fileName = Path.GetFileName(httpRequest.Files[0].FileName);
-                award.ImageUrl = fileName;
-                _badgeRepository.Add(award);
-                var path = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["BadgeImageUploadPath"]+ award.Id);
-                var imagePath = $"{path}/{fileName}";
-                Directory.CreateDirectory(path);
-                httpRequest.Files[0].SaveAs(imagePath);
-            }
+            _badgeRepository.Add(award);
             HttpResponseMessage response;
             if (award.Id == 0)
             {
