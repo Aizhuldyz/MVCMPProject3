@@ -161,19 +161,17 @@ $(document).on("submit", "#person_form_edit", function (e) {
             if (deletePhoto == undefined)
                 deletePhoto = false;
             formData.append("DeletePhoto", deletePhoto);
+            var apiUri = "http://localhost/MVCApp/api";
             $.ajax({
-                url: "Person/Edit",
-                type: "POST",
+                url: apiUri + "/user/" + id,
+                type: "PUT",
                 processData: false,
                 contentType: false,
                 data: formData,
                 datatype: "json",
                 success: function (data, status, xhr) {
-                    if (data.success) {
+                    if (xhr.status === 201) {
                         location.reload();
-                    } else if (data.validationError) {
-                        var errors = $.parseJSON(data.validationError);
-                        validator.showErrors(errors);
                     } else {
                         alert("Error Occured while updating person");
                     }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Web;
 using MVCApp.Models;
 
@@ -11,7 +13,7 @@ namespace MVCApp.Repository
     {
         private readonly ApplicationDbContext _context;
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private readonly string _cacheKey = ConfigurationManager.AppSettings["personsCacheKey"];
 
         public RecognitionRepository()
         {
@@ -43,6 +45,7 @@ namespace MVCApp.Repository
             {
                 _context.Recognitions.Add(recognition);
                 _context.SaveChanges();
+                MemoryCache.Default.Remove(_cacheKey);
                 return true;
             }
             catch (DbException e)

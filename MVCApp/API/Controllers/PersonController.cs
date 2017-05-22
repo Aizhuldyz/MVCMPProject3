@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -80,12 +82,45 @@ namespace MVCApp.API.Controllers
         }
 
         [Route("user/{id:decimal}")]
-        public IHttpActionResult Put(int id, Person person)
+        public HttpResponseMessage Put()
         {
-            person.Id = id;
-            if (!_personRepository.Update(person))
-                return NotFound();
-            return Ok();
+            var formCollection = HttpContext.Current.Request.Form;
+            HttpResponseMessage response;
+            
+            if (formCollection["Name"] == null|| formCollection["BirthDate"] == null)
+            {
+                response = Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                var person = new Person
+                {
+                    Id = int.Parse(formCollection["Id"]),
+                    Name = formCollection["Name"],
+                    BirthDate = DateTime.Parse(formCollection["BirthDate"])
+                };
+                person.PhotoUrl = _personRepository.Get(person.Id).PhotoUrl;
+
+                if (bool.Parse(formCollection["DeletePhoto"]))
+                {
+                    person.PhotoUrl = null;
+                }
+                else if (HttpContext.Current.Request.Files["Photo"] != null)
+                {
+                    var httpPostedFile = HttpContext.Current.Request.Files["Photo"];
+                    var fileName = Path.GetFileName(httpPostedFile.FileName);
+                    person.PhotoUrl = fileName;
+                    var path =
+                        HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["PersonPhotoUploadPath"] +
+                                                           person.Id);
+                    var imagePath = $"{path}/{fileName}";
+                    Directory.CreateDirectory(path);
+                    httpPostedFile.SaveAs(imagePath);
+                }
+                response = Request.CreateResponse(_personRepository.Update(person) ? HttpStatusCode.Created 
+                    : HttpStatusCode.InternalServerError);
+            }
+            return response;
         }
 
         [Route("user/{id:decimal}")]

@@ -67,18 +67,7 @@ namespace MVCApp.Repository
             if (oldPerson == null) return false;
             _context.Persons.AddOrUpdate(person);
             _context.SaveChanges();
-            var persons = (List<Person>)MemoryCache.Default[_cacheKey];
-            if (IsInCache(person.Id))
-            {
-                var outdated = persons.FirstOrDefault(x => x.Id == person.Id);
-                persons.Remove(outdated);
-                persons.Add(person);
-            }
-            else if (persons == null)
-            {
-                persons = new List<Person> {person};
-                MemoryCache.Default.Add(_cacheKey, persons, new DateTimeOffset(DateTime.Now.AddMinutes(_cacheTimeOut)));
-            }
+            MemoryCache.Default.Remove(_cacheKey);
             return true;
         }
 
@@ -88,11 +77,7 @@ namespace MVCApp.Repository
             if (person == null) return false;
             _context.Persons.Remove(person);
             _context.SaveChanges();
-            if (IsInCache(id))
-            {
-                var persons = (List<Person>) MemoryCache.Default[_cacheKey];
-                persons.Remove(person);
-            }
+            MemoryCache.Default.Remove(_cacheKey);
             return true;
         }
 
