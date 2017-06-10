@@ -27,7 +27,16 @@ namespace MVCApp.Controllers
             _personRepository = new PersonRepository(dbContext);
             _recognitionRepository = new RecognitionRepository(dbContext);
             _badgeRepository = new BadgeRepository();
-            _badgeRepository.SetAppContext(new ApplicationDbContext());
+            _badgeRepository.SetAppContext(dbContext);
+        }
+
+        public PersonController(ApplicationDbContext context, BadgeRepository badgeRepo,
+            PersonRepository personRepo, RecognitionRepository recognitionRepo)
+        {
+            _personRepository = personRepo;
+            _recognitionRepository = recognitionRepo;
+            _badgeRepository = badgeRepo;
+            _badgeRepository.SetAppContext(context);
         }
 
         [LogAction]       

@@ -12,28 +12,28 @@ namespace MVCApp.Repository
     {
         private ApplicationDbContext _context;
 
-        public void SetAppContext(ApplicationDbContext context)
+        public virtual void SetAppContext(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public Badge Get(int id)
+        public virtual Badge Get(int id)
         {
-            return _context.Badges.FirstOrDefault(x => x.Id == id);
+            return _context.Badges.Find(id);
         }
 
-        public List<Badge> GetAll()
+        public virtual List<Badge> GetAll()
         {
             return _context.Badges.ToList();
         }
 
-        public void Add(Badge badge)
+        public virtual void Add(Badge badge)
         {
             _context.Badges.Add(badge);
             _context.SaveChanges();
         }
 
-        public bool Update(Badge badge)
+        public virtual bool Update(Badge badge)
         {
             var oldPerson = Get(badge.Id);
             if (oldPerson == null) return false;
@@ -42,28 +42,28 @@ namespace MVCApp.Repository
             return true;
         }
 
-        public List<Badge> FindAll(Func<Badge, bool> predicate)
+        public virtual List<Badge> FindAll(Func<Badge, bool> predicate)
         {
             var badges = _context.Badges.Where(predicate).ToList();
             return badges;
         }
 
-        public Badge FindSingle(Func<Badge, bool> predicate)
+        public virtual Badge FindSingle(Func<Badge, bool> predicate)
         {
             var badge = _context.Badges.Where(predicate).FirstOrDefault();
             return badge;
         }
 
-        public bool Delete(int id)
+        public virtual bool Delete(int id)
         {
-            var badge = _context.Badges.FirstOrDefault(x => x.Id == id);
+            var badge = Get(id);
             if (badge == null) return false;
             _context.Badges.Remove(badge);
             _context.SaveChanges();
             return true;
         }
 
-        public bool HasChanges()
+        public virtual  bool HasChanges()
         {
             return false;
         }

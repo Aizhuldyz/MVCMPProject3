@@ -28,7 +28,7 @@ namespace MVCApp.Repository
             _context = context;
         }
 
-        public IEnumerable<Person> GetAll()
+        public virtual IEnumerable<Person> GetAll()
         {
             var persons = MemoryCache.Default[_cacheKey] as IEnumerable<Person>;
             if (persons == null)
@@ -39,7 +39,7 @@ namespace MVCApp.Repository
             return persons;
         }
 
-        public Person Get(int id)
+        public virtual Person Get(int id)
         {
             if (IsInCache(id))
             {

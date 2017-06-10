@@ -25,9 +25,9 @@ namespace MVCApp.Models
         {
         }
 
-        public DbSet<Person> Persons { get; set; }
-        public DbSet<Badge> Badges { get; set; }
-        public DbSet<Recognition> Recognitions { get; set; }
+        public virtual DbSet<Person> Persons { get; set; }
+        public virtual DbSet<Badge> Badges { get; set; }
+        public virtual DbSet<Recognition> Recognitions { get; set; }
 
         public static ApplicationDbContext Create()
         {

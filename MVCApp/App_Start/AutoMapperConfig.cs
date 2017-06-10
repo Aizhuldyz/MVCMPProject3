@@ -6,7 +6,7 @@ using AutoMapper;
 using MVCApp.Models;
 using MVCApp.ViewModels;
 
-namespace MVCApp.App_Start
+namespace MVCApp
 {
     public class AutoMapperConfig
     {
