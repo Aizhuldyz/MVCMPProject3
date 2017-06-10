@@ -32,7 +32,7 @@ namespace MVCAppTest
         }
 
         [TestMethod]
-        public void GetCreateShouldReturnPartialView()
+        public void GetCreateShouldReturnView()
         {
             var controller = new PersonController();
             var result = controller.Create();
@@ -64,6 +64,50 @@ namespace MVCAppTest
             _personRepo.Setup(x => x.GetAll()).Returns(new List<Person>());
             var result = controller.Index();
             Assert.IsInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [TestMethod]
+        public void DeleteShouldReturnJsonResult()
+        {
+            var controller = new PersonController(_context.Object, _badgeRepo.Object,
+                _personRepo.Object, _recognitionRepo.Object);
+            _personRepo.Setup(x => x.Delete(2)).Returns(true);
+            var result = controller.Delete(2);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+        }
+
+        [TestMethod]
+        public void EditShouldReturlHttpResultWhenIdNotFound()
+        {
+            var controller = new PersonController(_context.Object, _badgeRepo.Object,
+                _personRepo.Object, _recognitionRepo.Object);
+            Person notFound = null;
+            _personRepo.Setup(x => x.Get(2)).Returns(notFound);
+
+            var result = controller.Edit(2);
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+
+        }
+
+        [TestMethod]
+        public void GetAddrecognitionShouldReturnPartialView()
+        {
+            var controller = new PersonController(_context.Object, _badgeRepo.Object,
+                _personRepo.Object, _recognitionRepo.Object);
+            _badgeRepo.Setup(x => x.GetAll())
+                .Returns(new List<Badge>
+                {
+                    new Badge
+                    {
+                        Title = "title",
+                        Description = "desctiption",
+                        Id = 1,
+                        ImageUrl = "image"
+                    }
+                });
+            var result = controller.AddRecognition(1, "personName");
+            Assert.IsInstanceOfType(result, typeof(PartialViewResult));
+            Assert.AreEqual("Partial/_AddNewBadge", ((PartialViewResult)result).ViewName);
         }
 
     }

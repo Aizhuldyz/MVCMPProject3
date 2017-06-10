@@ -305,6 +305,26 @@
     <Compile Include="ViewModels\PersonViewModel.cs" />
     <Compile Include="ViewModels\SelectBadgesViewModel.cs" />
     <Compile Include="ViewModels\UserRoleExpanded.cs" />
+    <Compile Include="Views\Person\Index.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Person\Partial\_AddNewBadge.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>_AddNewBadge.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Person\Partial\_PersonDetails.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>_PersonDetails.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Person\Partial\_PersonTable.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>_PersonTable.cshtml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -371,9 +391,15 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Person\Index.cshtml" />
+    <Content Include="Views\Person\Index.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Index.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\Badge\Index.cshtml" />
-    <Content Include="Views\Person\Partial\_PersonTable.cshtml" />
+    <Content Include="Views\Person\Partial\_PersonTable.cshtml">
+      <Generator>Razorgenerator</Generator>
+      <LastGenOutput>_PersonTable.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\Person\Partial\_CreatePersonForm.cshtml" />
     <Content Include="Views\Person\Partial\_PersonTableRow.cshtml" />
     <Content Include="Views\Person\Partial\_EditPersonForm.cshtml" />
@@ -381,9 +407,15 @@
     <Content Include="Views\Badge\Add.cshtml" />
     <Content Include="Views\Badge\Edit.cshtml" />
     <Content Include="Views\Badge\_BadgeLayout.cshtml" />
-    <Content Include="Views\Person\Partial\_AddNewBadge.cshtml" />
+    <Content Include="Views\Person\Partial\_AddNewBadge.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>_AddNewBadge.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\Badge\Partial\_BadgeInfo.cshtml" />
-    <Content Include="Views\Person\Partial\_PersonDetails.cshtml" />
+    <Content Include="Views\Person\Partial\_PersonDetails.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>_PersonDetails.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\Person\Partial\_PersonList.cshtml" />
     <Content Include="Views\Badge\Partial\_BadgeList.cshtml" />
     <Content Include="Views\Badge\Partial\_BadgeDetails.cshtml" />

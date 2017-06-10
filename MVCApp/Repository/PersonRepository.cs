@@ -48,12 +48,12 @@ namespace MVCApp.Repository
             return _context.Persons.FirstOrDefault(x => x.Id == id);
         }
 
-        public List<string> GetAllNames()
+        public virtual List<string> GetAllNames()
         {
             return _context.Persons.Select(x => x.Name).ToList();
         }
 
-        public void Add(Person person)
+        public virtual void Add(Person person)
         {
             _context.Persons.Add(person);
             _context.SaveChanges();
@@ -61,7 +61,7 @@ namespace MVCApp.Repository
         }
 
 
-        public bool Update(Person person)
+        public virtual bool Update(Person person)
         {
             var oldPerson = Get(person.Id);
             if (oldPerson == null) return false;
@@ -71,7 +71,7 @@ namespace MVCApp.Repository
             return true;
         }
 
-        public bool Delete(int id)
+        public virtual bool Delete(int id)
         {
             var person = _context.Persons.FirstOrDefault(x => x.Id == id);
             if (person == null) return false;
